@@ -1,20 +1,29 @@
 ﻿@using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
+@using HerPublicWebsite.Configuration
 @using HerPublicWebsite.ExternalServices.GoogleAnalytics
 @using HerPublicWebsite.Controllers
 @using HerPublicWebsite.Helpers
 @using HerPublicWebsite.Services
 @using HerPublicWebsite.Services.Cookies
+@using Microsoft.Extensions.Options
 @inject StaticAssetsVersioningService StaticAssetsVersioning
 @inject CookieService CookieService
 @inject GoogleAnalyticsService GoogleAnalytics
+@inject IOptions<DebugInformationConfiguration> DebugInfo
 @{
     string assetsPath = "/assets/images";
 }
 <!DOCTYPE html>
 
-<!-- Build number: @(BuildNumberHelper.GetBuildNumber()) -->
-<!-- Server name: @(Environment.MachineName) -->
+@if (DebugInfo.Value.Html.ShowBuildNumber)
+{
+    <!-- Build number: @(BuildNumberHelper.GetBuildNumber()) -->
+}
+@if (DebugInfo.Value.Html.ShowServerName)
+{
+    <!-- Server name: @(Environment.MachineName) -->
+}
 
 <html lang="en" class="govuk-template app-html-class">
 <head>

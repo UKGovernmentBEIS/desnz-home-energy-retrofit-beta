@@ -27,6 +27,7 @@ using HerPublicWebsite.Services;
 using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
+using HerPublicWebsite.Configuration;
 
 namespace HerPublicWebsite
 {
@@ -73,6 +74,7 @@ namespace HerPublicWebsite
             ConfigureGovUkNotify(services);
             ConfigureCookieService(services);
             ConfigureDatabaseContext(services);
+            ConfigureDebugInformation(services);
             ConfigureGoogleAnalyticsService(services);
 
             if (!webHostEnvironment.IsProduction())
@@ -119,6 +121,12 @@ namespace HerPublicWebsite
             var databaseConnectionString = configuration.GetConnectionString("PostgreSQLConnection");
             services.AddDbContext<HerDbContext>(opt =>
                 opt.UseNpgsql(databaseConnectionString));
+        }
+        
+        private void ConfigureDebugInformation(IServiceCollection services)
+        {
+            services.Configure<DebugInformationConfiguration>(
+                configuration.GetSection(DebugInformationConfiguration.ConfigSection));
         }
 
         private void ConfigureCookieService(IServiceCollection services)
