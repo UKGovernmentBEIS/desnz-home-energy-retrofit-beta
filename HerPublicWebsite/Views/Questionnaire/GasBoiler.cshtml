@@ -13,16 +13,21 @@
 @section BeforeMain {
     <nav>
         @await Html.GovUkBackLink(new BackLinkViewModel
-        {
-            Text = "Back",
-            Href = Model.BackLink,
-        })
+               {
+                   Text = "Back",
+                   Href = Model.BackLink,
+               })
+        
+        @await Html.GovUkToggle(new ToggleViewModel
+               {
+                   
+               })
     </nav>
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        
+
         <form action="@Url.Action(nameof(QuestionnaireController.GasBoiler_Post), "Questionnaire")" method="post" novalidate>
             @(Html.HiddenFor(m => m.EntryPoint))
             @Html.AntiForgeryToken()
@@ -42,11 +47,10 @@
                            Html = @<text>
                                       <p class="govuk-body">To be eligible for the Home Upgrade Grant, you cannot use a gas boiler to heat the property.</p>
                                       <p class="govuk-body">If you have two heating systems but use your gas boiler more than the other, choose ‘Yes, I have a gas boiler’.</p>
-                               </text>
-                               
+                                   </text>
                        },
                        // Necessary to make sure the options appear in the correct order
-                       overrideRadioValues: new [] { HasGasBoiler.Yes, HasGasBoiler.No })
+                       overrideRadioValues: new[] { HasGasBoiler.Yes, HasGasBoiler.No })
 
             @(await Html.GovUkButton(new ButtonViewModel
             {
@@ -54,6 +58,6 @@
             }))
 
         </form>
-        
+
     </div>
 </div>

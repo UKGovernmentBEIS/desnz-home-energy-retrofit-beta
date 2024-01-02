@@ -39,3 +39,36 @@
 .her_local_authority_section {
     @include govuk-responsive-padding(6, "bottom");
 }
+
+
+// Copied from HMRC Frontend - language-select
+//.hmrc-language-select {
+//    @include govuk-font($size: 16);
+//    @include govuk-clearfix;
+//}
+
+.hmrc-language-select__list {
+    @include govuk-font($size: 16);
+    @include govuk-clearfix;
+    margin-top: 1em;
+    float: right;
+    text-align: right;
+}
+
+.hmrc-language-select__list-item {
+    display: inline-block;
+
+    &:first-child::after {
+        content: "";
+        display: inline-block;
+        position: relative;
+        top: 0.1875em;
+        height: 1em;
+        border-right: 0.09375em solid  $govuk-text-colour;
+    }
+
+    a,
+    [aria-current] {
+        padding: 0.3125em;
+    }
+}
