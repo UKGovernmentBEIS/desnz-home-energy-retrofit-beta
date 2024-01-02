@@ -17,43 +17,6 @@
             Text = "Back",
             Href = Model.BackLink,
         })
-        <form class="sea-language-select govuk-body" action="<tbc>" method="post"
-                      aria-label="Language switcher">
-                    
-            @Html.AntiForgeryToken()
-            
-            <input name="next" type="hidden" value="@ViewContext.HttpContext.Request.Path">
-            
-            <ul class="sea-language-select__list">
-                @if (ViewContext.HttpContext.Request.Headers["Accept-Language"].ToString().StartsWith("en"))
-                {
-                    <li class="sea-language-select__list-item">
-                        <span aria-current="true">English</span>
-                    </li>
-                    <li class="sea-language-select__list-item">
-                        <input name="language" type="hidden" value="cy">
-                        <button type="submit" lang="cy" rel="alternate" class="govuk-link">
-                            <span class="govuk-visually-hidden">Newid yr iaith ir Gymraeg</span>
-                            <span aria-hidden="true">Cymraeg</span>
-                        </button>
-                    </li>
-                }
-
-                @if (ViewContext.HttpContext.Request.Headers["Accept-Language"].ToString().StartsWith("cy"))
-                {
-                    <li class="sea-language-select__list-item">
-                        <input name="language" type="hidden" value="en">
-                        <button type="submit" lang="en" rel="alternate" class="govuk-link">
-                            <span class="govuk-visually-hidden">Change the language to English</span>
-                            <span aria-hidden="true">English</span>
-                        </button>
-                    </li>
-                    <li class="sea-language-select__list-item">
-                        <span aria-current="true">Cymraeg</span>
-                    </li>
-                }
-            </ul>
-        </form>
     </nav>
 }
 
