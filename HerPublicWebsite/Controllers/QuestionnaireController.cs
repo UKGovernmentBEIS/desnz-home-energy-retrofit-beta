@@ -473,6 +473,7 @@ public class QuestionnaireController : Controller
         var viewModel = new PendingViewModel()
         {
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityMessagePartialLocation = GetLocalAuthorityPendingPartialInformationByCustodianCode(questionnaire.CustodianCode),
             Submitted = emailPreferenceSubmitted,
             EmailAddress = questionnaire.NotificationEmailAddress,
             CanContactByEmailAboutFutureSchemes = questionnaire.NotificationConsent.ToNullableYesOrNo(),
@@ -621,6 +622,7 @@ public class QuestionnaireController : Controller
         {
             ReferenceCode = questionnaire.ReferralCode,
             LocalAuthorityName = questionnaire.LocalAuthorityName,
+            LocalAuthorityMessagePartialLocation = GetLocalAuthorityConfirmationPartialLocationByCustodianCode(questionnaire.CustodianCode),
             LocalAuthorityWebsite = questionnaire.LocalAuthorityWebsite,
             LocalAuthorityIsLiveWithHug2 = questionnaire.LocalAuthorityHug2Status is LocalAuthorityData.Hug2Status.Live,
             ConfirmationSentToEmailAddress = questionnaire.LaContactEmailAddress ?? questionnaire.ConfirmationEmailAddress,
@@ -809,5 +811,25 @@ public class QuestionnaireController : Controller
             Controller = controller;
             Values = values;
         }
+    }
+    
+    private string GetLocalAuthorityPendingPartialInformationByCustodianCode(
+        string custodianCode)
+    {
+        return custodianCode switch
+        {
+            "2610" => "~/Views/Partials/PendingLAMessage/Broadland.cshtml",
+            _ => "~/Views/Partials/PendingLAMessage/Default.cshtml"
+        };
+    }
+    
+    private string GetLocalAuthorityConfirmationPartialLocationByCustodianCode(
+        string custodianCode)
+    {
+        return custodianCode switch
+        {
+            "2610" => "~/Views/Partials/ConfirmationLAMessage/Broadland.cshtml",
+            _ => "~/Views/Partials/ConfirmationLAMessage/Default.cshtml"
+        };
     }
 }
