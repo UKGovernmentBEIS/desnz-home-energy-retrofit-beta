@@ -94,6 +94,55 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             };
             SendEmail(emailModel);
         }
+
+        public void SendFollowUpEmail
+        (
+            string emailAddress,
+            string recipientName,
+            string referenceCode,
+            string custodianCode,
+            DateTime referralDate,
+            string confirmFollowUpLink,
+            string noFollowUpLink
+        ) {
+            var template = govUkNotifyConfig.ReferralFollowUpTemplate;
+            LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
+            try
+            {
+                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
+            }
+            catch (KeyNotFoundException ex)
+            {
+                logger.LogError
+                (
+                    ex,
+                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
+                    custodianCode
+                );
+                throw new ArgumentOutOfRangeException
+                (
+                    $"Attempted to send reference code email with invalid custodian code \"{custodianCode}\"",
+                    ex
+                );
+            }
+            
+            var personalisation = new Dictionary<string, dynamic>
+            {
+                { template.RecipientNamePlaceholder, recipientName },
+                { template.ReferenceCodePlaceholder, referenceCode },
+                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                { template.ReferralDate, referralDate.ToShortDateString() },
+                { template.ConfirmFollowUpLink, confirmFollowUpLink },
+                { template.NoFollowUpLink, noFollowUpLink }
+            };
+            var emailModel = new GovUkNotifyEmailModel
+            {
+                EmailAddress = emailAddress,
+                TemplateId = template.Id,
+                Personalisation = personalisation
+            };
+            SendEmail(emailModel);
+        }
     }
 
     internal class GovUkNotifyEmailModel
