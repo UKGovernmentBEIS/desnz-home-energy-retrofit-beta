@@ -216,6 +216,35 @@ namespace HerPublicWebsite.Data.Migrations
                     b.ToTable("ReferralRequests");
                 });
 
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateOfFollowUpResponse")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ReferralRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("WasFollowedUp")
+                        .HasColumnType("boolean");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReferralRequestId");
+
+                    b.ToTable("ReferralRequestFollowUps");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
                 {
                     b.Property<int>("Id")
@@ -236,6 +265,15 @@ namespace HerPublicWebsite.Data.Migrations
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
+                {
+                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
+                        .WithMany()
+                        .HasForeignKey("ReferralRequestId");
+
+                    b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
                 {
                     b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
                         .WithMany()
