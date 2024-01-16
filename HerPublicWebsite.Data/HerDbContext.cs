@@ -14,7 +14,6 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
     public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     public DbSet<ReferralRequestFollowUp> ReferralRequestFollowUps { get; set; }
 
-
     public HerDbContext(DbContextOptions<HerDbContext> options) : base(options)
     {
     }
@@ -102,7 +101,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
 
     private void SetupReferralRequestFollowUpss(ModelBuilder modelBuilder)
     {
-        // Referral request primary key
+        // Referral request follow up primary key
         modelBuilder.Entity<ReferralRequestFollowUp>()
             .Property<int>("Id")
             .HasColumnType("integer")
@@ -115,7 +114,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
             .Property(rrfu => rrfu.DateOfFollowUpResponse)
             .HasColumnType("timestamp without time zone");
 
-        // Referral request row versioning
+        // Referral request follow up row versioning
         AddRowVersionColumn(modelBuilder.Entity<ReferralRequestFollowUp>());
     }
 
