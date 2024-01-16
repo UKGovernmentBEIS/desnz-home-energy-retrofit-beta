@@ -14,11 +14,7 @@ public interface IEmailSender
 
     public void SendFollowUpEmail
     (
-        string emailAddress,
-        string recipientName,
-        string referenceCode,
-        string custodianCode,
-        DateTime referralDate,
+        ReferralRequest referralRequest,
         string followUpLink
     );
 }

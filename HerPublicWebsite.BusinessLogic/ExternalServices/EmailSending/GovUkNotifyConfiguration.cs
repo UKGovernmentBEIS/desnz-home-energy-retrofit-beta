@@ -16,6 +16,7 @@ public class ReferenceCodeConfiguration
     public string ReferenceCodePlaceholder { get; set; }
     public string LocalAuthorityNamePlaceholder { get; set; }
     public string LocalAuthorityWebsiteUrlPlaceholder { get; set; }
+
 }
 
 public class ReferralFollowUpConfiguration
@@ -24,6 +25,6 @@ public class ReferralFollowUpConfiguration
     public string RecipientNamePlaceholder { get; set; }
     public string ReferenceCodePlaceholder { get; set; }
     public string LocalAuthorityNamePlaceholder { get; set; }
-    public string ReferralDate { get; set; }
-    public string FollowUpLink {get; set; }
+    public string ReferralDatePlaceholder { get; set; }
+    public string FollowUpLinkPlaceholder {get; set; }
 }

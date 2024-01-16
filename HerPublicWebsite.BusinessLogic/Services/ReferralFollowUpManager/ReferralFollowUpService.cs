@@ -1,14 +1,17 @@
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Encodings.Web;
+using System.Web;
+using Hangfire.Dashboard;
 using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 using HerPublicWebsite.BusinessLogic.Models;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUpManager;
 
 public interface IReferralFollowUpService
 {
-    public Task<ReferralRequest> Test();
     public Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest);
     public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token);
     public Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp);
@@ -23,26 +26,18 @@ public class ReferralFollowUpService : IReferralFollowUpService
         this.emailSender = emailSender;
         this.dataAccessProvider = dataAccessProvider;
     }
-    public async Task<ReferralRequest> Test()
-    {
-        var test = await dataAccessProvider.GetUnsubmittedReferralRequestsAsync();
-        return test[0];
-    }
 
     public async Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest)
     {
         string token = GenerateFollowUpToken();
-        string followUpLink = "someroute/ReferralFollowUp/Yes?token=" + token;
+
+        string followUpLink = "https://localhost:5001/referral-follow-up/respond-page/" + token;
         
         ReferralRequestFollowUp referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
         await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
 
         this.emailSender.SendFollowUpEmail(
-            referralRequest.ContactEmailAddress,
-             referralRequest.FullName,
-              referralRequest.ReferralCode,
-               referralRequest.CustodianCode,
-                referralRequest.RequestDate,
+            referralRequest,
                  followUpLink);
     }
     public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)

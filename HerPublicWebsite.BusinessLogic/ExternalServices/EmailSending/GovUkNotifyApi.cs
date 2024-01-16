@@ -97,18 +97,14 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 
         public void SendFollowUpEmail
         (
-            string emailAddress,
-            string recipientName,
-            string referenceCode,
-            string custodianCode,
-            DateTime referralDate,
+            ReferralRequest referralRequest,
             string followUpLink
         ) {
             var template = govUkNotifyConfig.ReferralFollowUpTemplate;
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
             try
             {
-                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[custodianCode];
+                localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
             }
             catch (KeyNotFoundException ex)
             {
@@ -116,30 +112,32 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 (
                     ex,
                     "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
-                    custodianCode
+                    referralRequest.CustodianCode
                 );
                 throw new ArgumentOutOfRangeException
                 (
-                    $"Attempted to send reference code email with invalid custodian code \"{custodianCode}\"",
+                    $"Attempted to send reference code email with invalid custodian code \"{referralRequest.CustodianCode}\"",
                     ex
                 );
             }
             
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.RecipientNamePlaceholder, recipientName },
-                { template.ReferenceCodePlaceholder, referenceCode },
+                { template.RecipientNamePlaceholder, referralRequest.FullName },
+                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
                 { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                { template.ReferralDate, referralDate.ToShortDateString() },
-                { template.FollowUpLink, followUpLink },
+                { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
+                { template.FollowUpLinkPlaceholder, followUpLink },
             };
             var emailModel = new GovUkNotifyEmailModel
             {
-                EmailAddress = emailAddress,
+                EmailAddress = referralRequest.ContactEmailAddress,
                 TemplateId = template.Id,
                 Personalisation = personalisation
             };
+            Console.WriteLine("HERE--------------");
             SendEmail(emailModel);
+
         }
     }
 

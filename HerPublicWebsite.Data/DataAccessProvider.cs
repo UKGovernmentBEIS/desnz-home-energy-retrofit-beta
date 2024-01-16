@@ -92,7 +92,7 @@ public class DataAccessProvider : IDataAccessProvider
     {   
         ReferralRequestFollowUp referralRequestFollowUp = context.ReferralRequestFollowUps.Single(rrfu => rrfu.Token == token);
         referralRequestFollowUp.WasFollowedUp = wasFollowedUp;
-        Console.WriteLine(wasFollowedUp);
+        referralRequestFollowUp.DateOfFollowUpResponse = DateTime.Now;
         await context.SaveChangesAsync();
         return referralRequestFollowUp;
     }
