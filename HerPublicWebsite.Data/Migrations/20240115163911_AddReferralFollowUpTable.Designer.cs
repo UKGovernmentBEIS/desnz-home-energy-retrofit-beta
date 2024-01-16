@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(HerDbContext))]
-    [Migration("20240115103227_AddReferralFollowUpTable")]
+    [Migration("20240115163911_AddReferralFollowUpTable")]
     partial class AddReferralFollowUpTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -226,13 +226,16 @@ namespace HerPublicWebsite.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateOfFollowUpResponse")
+                    b.Property<DateTime?>("DateOfFollowUpResponse")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<int?>("ReferralRequestId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("WasFollowedUp")
+                    b.Property<string>("Token")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("WasFollowedUp")
                         .HasColumnType("boolean");
 
                     b.Property<uint>("xmin")
@@ -243,6 +246,9 @@ namespace HerPublicWebsite.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ReferralRequestId");
+
+                    b.HasIndex("Token")
+                        .IsUnique();
 
                     b.ToTable("ReferralRequestFollowUps");
                 });

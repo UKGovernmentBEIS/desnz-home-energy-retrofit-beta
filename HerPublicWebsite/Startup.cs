@@ -32,6 +32,7 @@ using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUpManager;
 
 namespace HerPublicWebsite
 {
@@ -62,6 +63,7 @@ namespace HerPublicWebsite
             services.AddScoped<CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
+            services.AddScoped<IReferralFollowUpService, ReferralFollowUpService>();
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();

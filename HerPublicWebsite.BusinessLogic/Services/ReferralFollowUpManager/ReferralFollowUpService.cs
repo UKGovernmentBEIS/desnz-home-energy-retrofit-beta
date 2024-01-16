@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
@@ -7,9 +8,10 @@ namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUpManager;
 
 public interface IReferralFollowUpService
 {
+    public Task<ReferralRequest> Test();
     public Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest);
-    public Task ConfirmFollowUp(string token);
-    public Task NoFollowUp(string token);
+    public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token);
+    public Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp);
 }
 
 public class ReferralFollowUpService : IReferralFollowUpService
@@ -21,17 +23,19 @@ public class ReferralFollowUpService : IReferralFollowUpService
         this.emailSender = emailSender;
         this.dataAccessProvider = dataAccessProvider;
     }
+    public async Task<ReferralRequest> Test()
+    {
+        var test = await dataAccessProvider.GetUnsubmittedReferralRequestsAsync();
+        return test[0];
+    }
 
-    // Check whether a postcode is in the list of eligible postcodes found on this page
-    // https://www.gov.uk/government/publications/home-upgrade-grant-phase-2 in the "HUG: Phase 2 - eligible postcodes"
-    // spreadsheet.
     public async Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest)
     {
         string token = GenerateFollowUpToken();
-        string confirmFollowUpLink = "someroute/ReferralFollowUp/Yes?token=" + token;
-        string noFollowUpLink = "someroute/ReferralFollowUp/No?token=" + token;
+        string followUpLink = "someroute/ReferralFollowUp/Yes?token=" + token;
         
-        await dataAccessProvider.AddReferralFollowUpToken(referralRequest, token );
+        ReferralRequestFollowUp referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
+        await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
 
         this.emailSender.SendFollowUpEmail(
             referralRequest.ContactEmailAddress,
@@ -39,26 +43,20 @@ public class ReferralFollowUpService : IReferralFollowUpService
               referralRequest.ReferralCode,
                referralRequest.CustodianCode,
                 referralRequest.RequestDate,
-                 confirmFollowUpLink, 
-                 noFollowUpLink);
+                 followUpLink);
     }
-
-    public async Task ConfirmFollowUp(string token)
+    public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)
     {
+        return dataAccessProvider.GetReferralFollowUpByToken(token);
+    }
+    public async Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp)
+    {
+        ReferralRequestFollowUp referralRequestFollowUp = dataAccessProvider.GetReferralFollowUpByToken(token);
         // What should we do if the code has already been used?
-        if (await dataAccessProvider.hasReferralFollowUpCodeBeenUsed(token)){
+        if (referralRequestFollowUp.WasFollowedUp is not null){
             throw new InvalidOperationException();
         }
-        await dataAccessProvider.MarkFollowUpTokenAsUsedWithResponse(token, wasFollowedUp=true);
-    }
-
-    public async Task NoFollowUp(string token)
-    {
-        // What should we do if the code has already been used?
-        if (await dataAccessProvider.hasReferralFollowUpCodeBeenUsed(token)){
-            throw new InvalidOperationException();
-        }
-        await dataAccessProvider.MarkFollowUpTokenAsUsedWithResponse(token, wasFollowedUp=false);
+        await dataAccessProvider.UpdateReferralFollowUpByTokenWithWasFollowedUp(token, hasFollowedUp);
     }
 
     private string GenerateFollowUpToken()

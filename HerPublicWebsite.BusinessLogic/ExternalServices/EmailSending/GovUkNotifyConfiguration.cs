@@ -25,6 +25,5 @@ public class ReferralFollowUpConfiguration
     public string ReferenceCodePlaceholder { get; set; }
     public string LocalAuthorityNamePlaceholder { get; set; }
     public string ReferralDate { get; set; }
-    public string ConfirmFollowUpLink {get; set; }
-    public string NoFollowUpLink {get; set; }
+    public string FollowUpLink {get; set; }
 }

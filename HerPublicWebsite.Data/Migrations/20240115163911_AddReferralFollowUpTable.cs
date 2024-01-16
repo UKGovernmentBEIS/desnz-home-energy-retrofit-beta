@@ -17,8 +17,9 @@ namespace HerPublicWebsite.Data.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ReferralRequestId = table.Column<int>(type: "integer", nullable: true),
-                    WasFollowedUp = table.Column<bool>(type: "boolean", nullable: false),
-                    DateOfFollowUpResponse = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Token = table.Column<string>(type: "text", nullable: true),
+                    WasFollowedUp = table.Column<bool>(type: "boolean", nullable: true),
+                    DateOfFollowUpResponse = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
@@ -35,6 +36,12 @@ namespace HerPublicWebsite.Data.Migrations
                 name: "IX_ReferralRequestFollowUps_ReferralRequestId",
                 table: "ReferralRequestFollowUps",
                 column: "ReferralRequestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReferralRequestFollowUps_Token",
+                table: "ReferralRequestFollowUps",
+                column: "Token",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

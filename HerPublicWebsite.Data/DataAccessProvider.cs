@@ -77,6 +77,26 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
+    public async Task<ReferralRequestFollowUp> AddReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp)
+    {
+        context.ReferralRequestFollowUps
+            .Add(referralRequestFollowUp);
+        await context.SaveChangesAsync();
+        return referralRequestFollowUp;
+    }
+    public ReferralRequestFollowUp GetReferralFollowUpByToken(string token)
+    {
+        return context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest).Single(rrfu => rrfu.Token == token);
+    }
+    public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp)
+    {   
+        ReferralRequestFollowUp referralRequestFollowUp = context.ReferralRequestFollowUps.Single(rrfu => rrfu.Token == token);
+        referralRequestFollowUp.WasFollowedUp = wasFollowedUp;
+        Console.WriteLine(wasFollowedUp);
+        await context.SaveChangesAsync();
+        return referralRequestFollowUp;
+    }
+
     public async Task PersistAllChangesAsync()
     {
         await context.SaveChangesAsync();

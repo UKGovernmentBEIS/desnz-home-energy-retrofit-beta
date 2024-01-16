@@ -102,8 +102,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             string referenceCode,
             string custodianCode,
             DateTime referralDate,
-            string confirmFollowUpLink,
-            string noFollowUpLink
+            string followUpLink
         ) {
             var template = govUkNotifyConfig.ReferralFollowUpTemplate;
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
@@ -132,8 +131,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 { template.ReferenceCodePlaceholder, referenceCode },
                 { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
                 { template.ReferralDate, referralDate.ToShortDateString() },
-                { template.ConfirmFollowUpLink, confirmFollowUpLink },
-                { template.NoFollowUpLink, noFollowUpLink }
+                { template.FollowUpLink, followUpLink },
             };
             var emailModel = new GovUkNotifyEmailModel
             {

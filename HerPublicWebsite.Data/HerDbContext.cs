@@ -110,7 +110,9 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         modelBuilder.Entity<ReferralRequestFollowUp>()
             .HasKey("Id");
         modelBuilder.Entity<ReferralRequestFollowUp>()
-            .Property(rr => rr.DateOfFollowUpResponse)
+            .HasIndex(rrfu => rrfu.Token).IsUnique();
+        modelBuilder.Entity<ReferralRequestFollowUp>()
+            .Property(rrfu => rrfu.DateOfFollowUpResponse)
             .HasColumnType("timestamp without time zone");
 
         // Referral request row versioning

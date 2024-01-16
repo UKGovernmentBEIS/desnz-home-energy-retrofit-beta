@@ -19,7 +19,6 @@ public interface IEmailSender
         string referenceCode,
         string custodianCode,
         DateTime referralDate,
-        string confirmFollowUpLink,
-        string noFollowUpLink
+        string followUpLink
     );
 }
