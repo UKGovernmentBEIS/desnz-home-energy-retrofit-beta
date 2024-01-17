@@ -41,7 +41,6 @@ public class ReferralFollowUpService : IReferralFollowUpService
     public async Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp)
     {
         ReferralRequestFollowUp referralRequestFollowUp = dataAccessProvider.GetReferralFollowUpByToken(token);
-        // What should we do if the code has already been used?
         if (referralRequestFollowUp.WasFollowedUp is not null){
             throw new InvalidOperationException();
         }
