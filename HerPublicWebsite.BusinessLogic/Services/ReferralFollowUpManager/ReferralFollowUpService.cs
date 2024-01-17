@@ -15,10 +15,12 @@ public class ReferralFollowUpService : IReferralFollowUpService
 {
     private readonly IEmailSender emailSender;
     private readonly IDataAccessProvider dataAccessProvider;
-    public ReferralFollowUpService(IEmailSender emailSender, IDataAccessProvider dataAccessProvider)
+    private readonly IGuidService guidService;
+    public ReferralFollowUpService(IEmailSender emailSender, IDataAccessProvider dataAccessProvider, IGuidService guidService)
     {
         this.emailSender = emailSender;
         this.dataAccessProvider = dataAccessProvider;
+        this.guidService = guidService;
     }
 
     public async Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest)
@@ -49,6 +51,6 @@ public class ReferralFollowUpService : IReferralFollowUpService
 
     private string GenerateFollowUpToken()
     {
-        return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        return guidService.NewGuidString();
     }
 }

@@ -64,6 +64,7 @@ namespace HerPublicWebsite
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
             services.AddScoped<IEligiblePostcodeService, EligiblePostcodeService>();
             services.AddScoped<IReferralFollowUpService, ReferralFollowUpService>();
+            services.AddScoped<IGuidService, GuidService>();
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
