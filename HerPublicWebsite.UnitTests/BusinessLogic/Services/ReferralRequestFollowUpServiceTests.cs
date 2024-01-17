@@ -35,16 +35,16 @@ public class ReferralRequestFollowUpServiceTests
         // Arrange
         string testToken = "testToken";
         var newReferralRequest = new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build();
-        var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, "testToken");
+        var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, testToken);
 
-        mockGuidService.Setup(gs => gs.NewGuidString()).Returns("testToken");
+        mockGuidService.Setup(gs => gs.NewGuidString()).Returns(testToken);
         mockDataAccessProvider.Setup(dap => dap.AddReferralFollowUpToken(newReferralRequestFollowUp).Result).Returns(newReferralRequestFollowUp);
      
         // Act
         await referralFollowUpService.GenerateAndSendFollowUpEmail(newReferralRequest);
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.AddReferralFollowUpToken(newReferralRequestFollowUp));
+        mockDataAccessProvider.Verify(dap => dap.AddReferralFollowUpToken(It.Is<ReferralRequestFollowUp>(rrfu => rrfu.Token == newReferralRequestFollowUp.Token && rrfu.ReferralRequest == newReferralRequestFollowUp.ReferralRequest)));
         mockEmailSender.Verify(es => es.SendFollowUpEmail(newReferralRequest, It.IsAny<string>()));
     }
     
