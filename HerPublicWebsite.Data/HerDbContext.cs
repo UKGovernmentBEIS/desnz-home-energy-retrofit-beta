@@ -25,7 +25,6 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         SetupAnonymisedReports(modelBuilder);
         SetupPerReferralReports(modelBuilder);
         SetupReferralRequestFollowUpss(modelBuilder);
-
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)

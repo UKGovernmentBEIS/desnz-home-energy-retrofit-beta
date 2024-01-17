@@ -84,10 +84,12 @@ public class DataAccessProvider : IDataAccessProvider
         await context.SaveChangesAsync();
         return referralRequestFollowUp;
     }
+
     public ReferralRequestFollowUp GetReferralFollowUpByToken(string token)
     {
         return context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest).Single(rrfu => rrfu.Token == token);
     }
+    
     public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp)
     {   
         ReferralRequestFollowUp referralRequestFollowUp = context.ReferralRequestFollowUps.Single(rrfu => rrfu.Token == token);
