@@ -32,7 +32,7 @@ using HerPublicWebsite.Services.Cookies;
 using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUpManager;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 namespace HerPublicWebsite
 {

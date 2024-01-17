@@ -1,5 +1,6 @@
 ﻿using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
@@ -8,7 +9,7 @@ public interface IRegularJobsService
 {
     public Task RunNightlyTasksAsync();
     public Task WriteUnsubmittedReferralRequestToCsv();
-    public Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
+    public Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
     public Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd);
 }
 
@@ -17,15 +18,18 @@ public class RegularJobsService : IRegularJobsService
     private readonly IDataAccessProvider dataProvider;
     private readonly IS3FileWriter s3FileWriter;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
+    private readonly IReferralFollowUpService referralFollowUpManager;
 
     public RegularJobsService(
         IDataAccessProvider dataProvider,
         IS3FileWriter s3FileWriter,
-        CsvFileCreator.CsvFileCreator csvFileCreator)
+        CsvFileCreator.CsvFileCreator csvFileCreator,
+        IReferralFollowUpService referralFollowUpManager)
     {
         this.dataProvider = dataProvider;
         this.s3FileWriter = s3FileWriter;
         this.csvFileCreator = csvFileCreator;
+        this.referralFollowUpManager = referralFollowUpManager;
     }
 
     public async Task RunNightlyTasksAsync()
@@ -57,11 +61,13 @@ public class RegularJobsService : IRegularJobsService
         }
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp()
+    public async Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail()
     {
         var startDate = await AddWorkingDaysToDateTime(DateTime.Now, -10);
         var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpAfterDate(startDate);
-        return newReferrals;
+        foreach (ReferralRequest newReferral in newReferrals) {
+            await referralFollowUpManager.GenerateAndSendFollowUpEmail(newReferral);
+        }
     }
 
     public async Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd)

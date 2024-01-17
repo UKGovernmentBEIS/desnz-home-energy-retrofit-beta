@@ -2,7 +2,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 using HerPublicWebsite.BusinessLogic.Models;
 
-namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUpManager;
+namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 public interface IReferralFollowUpService
 {
