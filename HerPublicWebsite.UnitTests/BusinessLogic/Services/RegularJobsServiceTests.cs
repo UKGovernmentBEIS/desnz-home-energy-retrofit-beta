@@ -32,7 +32,7 @@ public class RegularJobsServiceTests
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockS3FileWriter = new Mock<IS3FileWriter>();
         mockReferralFollowUpService = new Mock<IReferralFollowUpService>();
-        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator(), mockReferralFollowUpServicea.Object);
+        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator(), mockReferralFollowUpService.Object);
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;
     }
