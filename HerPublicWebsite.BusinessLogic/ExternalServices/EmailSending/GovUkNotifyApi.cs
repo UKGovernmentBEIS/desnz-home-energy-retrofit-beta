@@ -111,12 +111,12 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 logger.LogError
                 (
                     ex,
-                    "Attempted to send reference code email with invalid custodian code \"{CustodianCode}\"",
+                    "Attempted to send follow up email with invalid custodian code \"{CustodianCode}\"",
                     referralRequest.CustodianCode
                 );
                 throw new ArgumentOutOfRangeException
                 (
-                    $"Attempted to send reference code email with invalid custodian code \"{referralRequest.CustodianCode}\"",
+                    $"Attempted to send follow up email with invalid custodian code \"{referralRequest.CustodianCode}\"",
                     ex
                 );
             }
