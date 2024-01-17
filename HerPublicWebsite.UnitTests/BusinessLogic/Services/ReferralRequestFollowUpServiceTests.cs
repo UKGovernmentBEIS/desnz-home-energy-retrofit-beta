@@ -18,22 +18,26 @@ public class ReferralRequestFollowUpServiceTests
     private IReferralFollowUpService referralFollowUpService;
     private Mock<IEmailSender> mockEmailSender;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
+    private Mock<IGuidService> mockGuidService;
 
     [SetUp]
     public void Setup()
     {
         mockEmailSender = new Mock<IEmailSender>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
-        referralFollowUpService = new ReferralFollowUpService(mockEmailSender.Object, mockDataAccessProvider.Object);
+        mockGuidService = new Mock<IGuidService>();
+        referralFollowUpService = new ReferralFollowUpService(mockEmailSender.Object, mockDataAccessProvider.Object, mockGuidService.Object);
     }
 
     [Test]
     public async Task GenerateAndSendFollowUpEmail_WhenCalledWithNewReferral_CreatesANewReferralRequestFollowUpInTheDbAndSendsTokenInEmail()
     {
         // Arrange
+        string testToken = "testToken";
         var newReferralRequest = new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build();
         var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, "testToken");
 
+        mockGuidService.Setup(gs => gs.NewGuidString()).Returns("testToken");
         mockDataAccessProvider.Setup(dap => dap.AddReferralFollowUpToken(newReferralRequestFollowUp).Result).Returns(newReferralRequestFollowUp);
      
         // Act
@@ -48,6 +52,7 @@ public class ReferralRequestFollowUpServiceTests
     [TestCase(false)]
     public async Task RecordFollowUpResponseForToken_WhenCalledWithTokenWhereAReferralRequestHasNotBeenFollowedUp_UpdatesReferralRequestFollowUp(bool hasFollowedUp)
     {
+        // Arrange
         string testToken = "testToken";
         var newReferralRequest = new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build();
         var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, testToken);
@@ -64,6 +69,7 @@ public class ReferralRequestFollowUpServiceTests
     [Test]
     public async Task RecordFollowUpResponseForToken_WhenCalledWithTokenWhereAReferralRequestHasAlreadyBeenFollowedUp_ThrowsInvalidOperationException()
     {
+        // Arrange
         string testToken = "testToken";
         var newReferralRequest = new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build();
         var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, testToken)
