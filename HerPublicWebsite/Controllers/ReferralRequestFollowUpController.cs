@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using HerPublicWebsite.Models.ReferralRequestFollowUp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUpManager;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using HerPublicWebsite.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Models;
 

@@ -13,6 +13,7 @@ using Moq;
 using Tests.Builders;
 using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
+using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -23,13 +24,15 @@ public class RegularJobsServiceTests
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IS3FileWriter> mockS3FileWriter;
     private MockHttpMessageHandler mockHttpHandler;
+    private Mock<IReferralFollowUpService> mockReferralFollowUpService;
     
     [SetUp]
     public void Setup()
     {
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockS3FileWriter = new Mock<IS3FileWriter>();
-        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator());
+        mockReferralFollowUpService = new Mock<IReferralFollowUpService>();
+        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator(), mockReferralFollowUpServicea.Object);
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;
     }

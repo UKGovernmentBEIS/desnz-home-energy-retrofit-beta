@@ -9,7 +9,7 @@ public interface IRegularJobsService
 {
     public Task RunNightlyTasksAsync();
     public Task WriteUnsubmittedReferralRequestToCsv();
-    public Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
+    public Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail();
     public Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd);
 }
 
@@ -35,7 +35,7 @@ public class RegularJobsService : IRegularJobsService
     public async Task RunNightlyTasksAsync()
     {
         await WriteUnsubmittedReferralRequestToCsv();
-        await GetReferralsPassedTenWorkingDayThresholdWithNoFollowUp();
+        await GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail();
     }
 
     public async Task WriteUnsubmittedReferralRequestToCsv() 
