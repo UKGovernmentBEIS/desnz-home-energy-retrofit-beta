@@ -24,7 +24,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
-        var data = underTest.CreateFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -42,7 +42,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
-        var data = underTest.CreateFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -63,7 +63,7 @@ public class CsvFileCreatorTests
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
-        var data = underTest.CreateFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -81,7 +81,7 @@ $"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 12345
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
-        var data = underTest.CreateFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -101,7 +101,7 @@ $"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 12345
         var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3 };
 
         // Act
-        var data = underTest.CreateFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);
@@ -124,7 +124,7 @@ $"2023-01-01 13:00:01,DummyCode00001,Full Name1,contact1@example.com,00001 12345
         var referralRequests = new List<ReferralRequest>() { referralRequest };
 
         // Act
-        var data = underTest.CreateFileData(referralRequests);
+        var data = underTest.CreateReferralRequestFileData(referralRequests);
 
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);

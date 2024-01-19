@@ -14,6 +14,7 @@ using Tests.Builders;
 using RichardSzalay.MockHttp;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -25,6 +26,8 @@ public class RegularJobsServiceTests
     private Mock<IS3FileWriter> mockS3FileWriter;
     private MockHttpMessageHandler mockHttpHandler;
     private Mock<IReferralFollowUpService> mockReferralFollowUpService;
+    private Mock<IEmailSender> mockEmailSender;
+
     
     [SetUp]
     public void Setup()
@@ -32,7 +35,9 @@ public class RegularJobsServiceTests
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockS3FileWriter = new Mock<IS3FileWriter>();
         mockReferralFollowUpService = new Mock<IReferralFollowUpService>();
-        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator(), mockReferralFollowUpService.Object);
+        mockEmailSender = new Mock<IEmailSender>();
+
+        regularJobsService = new RegularJobsService(mockDataAccessProvider.Object, mockS3FileWriter.Object, new CsvFileCreator(), mockReferralFollowUpService.Object, mockEmailSender.Object);
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;
     }
