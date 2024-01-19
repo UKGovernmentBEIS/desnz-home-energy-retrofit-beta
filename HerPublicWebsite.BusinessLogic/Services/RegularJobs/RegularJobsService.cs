@@ -42,7 +42,7 @@ public class RegularJobsService : IRegularJobsService
     {
         var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
 
-        foreach (var referralsByCustodianMonthAndYear in newReferrals.GroupBy(nr => new { nr.CustodianCode, nr.RequestDate.Month, nr.RequestDate.Year, nr.FollowUp.WasFollowedUp}))
+        foreach (var referralsByCustodianMonthAndYear in newReferrals.GroupBy(nr => new { nr.CustodianCode, nr.RequestDate.Month, nr.RequestDate.Year}))
         {
             var grouping = referralsByCustodianMonthAndYear.Key;
             var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
