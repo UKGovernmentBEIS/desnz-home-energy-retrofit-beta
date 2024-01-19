@@ -222,13 +222,8 @@ namespace HerPublicWebsite.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
                     b.Property<DateTime?>("DateOfFollowUpResponse")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<int?>("ReferralRequestId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Token")
                         .HasColumnType("text");
@@ -242,8 +237,6 @@ namespace HerPublicWebsite.Data.Migrations
                         .HasColumnType("xid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ReferralRequestId");
 
                     b.HasIndex("Token")
                         .IsUnique();
@@ -282,10 +275,17 @@ namespace HerPublicWebsite.Data.Migrations
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", b =>
                 {
                     b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
-                        .WithMany()
-                        .HasForeignKey("ReferralRequestId");
+                        .WithOne("FollowUp")
+                        .HasForeignKey("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
+                {
+                    b.Navigation("FollowUp");
                 });
 #pragma warning restore 612, 618
         }
