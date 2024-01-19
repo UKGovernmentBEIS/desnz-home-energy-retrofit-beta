@@ -10,9 +10,9 @@ namespace HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 
 public class CsvFileCreator
 {
-    public MemoryStream CreateFileData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
     {
-        var rows = referralRequests.Select(rr => new CsvRow(rr));
+        var rows = referralRequests.Select(rr => new CsvRowReferralRequest(rr));
 
         var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
@@ -29,7 +29,153 @@ public class CsvFileCreator
         }
     }
 
-    private class CsvRow
+
+    public MemoryStream CreateReferralRequestDownloadInformationData(IEnumerable<ReferralRequest> referralRequests)
+    {
+        var consortiumData = referralRequests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
+            .Select(group => new CsvRowConsortiumDownloadInformation(group));
+        var rows = referralRequests.GroupBy(rr => rr.CustodianCode)
+            .Select(group => new CsvRowLaDownloadInformation(
+                group, consortiumData.First(csd => csd.Consortium == group.Key))
+            );
+
+        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            InjectionOptions = InjectionOptions.Strip
+        };
+
+        using var writeableMemoryStream = new MemoryStream();
+        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
+        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
+        {
+            csvWriter.WriteRecords(rows);
+            csvWriter.Flush();
+            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
+        }
+    }
+
+    public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests)
+    {
+        var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
+
+        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            InjectionOptions = InjectionOptions.Strip
+        };
+
+        using var writeableMemoryStream = new MemoryStream();
+        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
+        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
+        {
+            csvWriter.WriteRecords(rows);
+            csvWriter.Flush();
+            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
+        }
+    }
+
+    private class CsvRowConsortiumDownloadInformation
+    {
+        [Index(0)]
+        [Name("Consortium")]
+        public string Consortium { get; set; }
+
+        [Index(1)]
+        [Name("Consortium All Referrals Downloaded")]
+        public bool AllConsortiumReferralsDownloaded { get; set; }
+        
+        [Index(2)]
+        [Name("Consortium Number of Referrals Not Downloaded")]
+        public int NumberUndownloadedConsortiumReferrals { get; set; }
+
+        [Index(3)]
+        [Name("Consortium Percentage of Referrals Not Downloaded")]
+        public float PercentageUndownloadedConsortiumReferrals { get; set; }
+
+
+        [Index(4)]
+        [Name("Consortium All Referrals Reported Contacted or No Reply")]
+        public bool AllConsortiumReferralsContacted { get; set; }
+        
+        [Index(5)]
+        [Name("Consortium Number of Referrals Reported Not Contacted")]
+        public int NumberUncontactedConsortiumReferrals { get; set; }
+
+        [Index(6)]
+        [Name("Consortium Percentage of Referrals Reported Not Contacted")]
+        public float PercentageUncontactedConsortiumReferrals { get; set; }
+        public CsvRowConsortiumDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping){
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
+            NumberUndownloadedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
+            AllConsortiumReferralsDownloaded = NumberUndownloadedConsortiumReferrals == 0;
+            PercentageUndownloadedConsortiumReferrals = (float)NumberUndownloadedConsortiumReferrals / requestGrouping.Count();
+            NumberUncontactedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralRequestFollowUp.WasFollowedUp == false ? 1 : 0);
+            AllConsortiumReferralsContacted = NumberUncontactedConsortiumReferrals == 0;
+            PercentageUncontactedConsortiumReferrals = (float)NumberUncontactedConsortiumReferrals / requestGrouping.Count();
+        }
+    }
+
+    private class CsvRowLaDownloadInformation
+    {
+        [Index(0)]
+        [Name("Consortium")]
+        public string Consortium { get; set; }
+
+        [Index(1)]
+        [Name("Consortium All Referrals Downloaded")]
+        public bool AllConsortiumReferralsDownloaded { get; set; }
+        
+        [Index(2)]
+        [Name("Consortium Number of Referrals Not Downloaded")]
+        public int NumberUndownloadedConsortiumReferrals { get; set; }
+
+        [Index(3)]
+        [Name("Consortium Percentage of Referrals Not Downloaded")]
+        public float PercentageUndownloadedConsortiumReferrals { get; set; }
+
+        [Index(4)]
+        [Name("LA")]
+        public string LocalAuthority { get; set; }
+        
+        [Index(5)]
+        [Name("LA Number of Referrals Not Downloaded")]
+        public int NumberUndownloadedLaReferrals { get; set; }
+
+        [Index(6)]
+        [Name("LA Percentage of Referrals Not Downloaded")]
+        
+        public float PercentageUndownloadedLaReferrals { get; set; }
+
+        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumDownloadInformation consortiumData){
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
+            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Name;
+            AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
+            NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
+            PercentageUndownloadedConsortiumReferrals = consortiumData.PercentageUndownloadedConsortiumReferrals;
+            NumberUndownloadedLaReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
+            PercentageUndownloadedLaReferrals = (float)NumberUndownloadedLaReferrals/requestGrouping.Count();
+        }
+    }
+    private class CsvRowReferralCodes
+    {
+        [Index(0)]
+        [Name("Consortium")]
+        public string Consortium { get; set; }
+        
+        [Index(1)]
+        [Name("Local Authority")]
+        public string LocalAuthority { get; set; }
+        
+        [Index(2)]
+        [Name("Referral Code")]
+        public string ReferralCode { get; set; }
+        public CsvRowReferralCodes(ReferralRequest request){
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Consortium;;
+            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Name;;
+            ReferralCode = request.ReferralCode;
+        }
+    }
+    
+    private class CsvRowReferralRequest
     {
         [Index(0)]
         [Name("Referral date")]
@@ -98,7 +244,7 @@ public class CsvFileCreator
         [Index(17)]
         public string Tenure { get; set; }
 
-        public CsvRow(ReferralRequest request)
+        public CsvRowReferralRequest(ReferralRequest request)
         {
             ReferralDate = request.RequestDate.ToString("yyyy-MM-dd HH:mm:ss");
             ReferralCode = request.ReferralCode;

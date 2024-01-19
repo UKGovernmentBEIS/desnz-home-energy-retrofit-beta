@@ -17,4 +17,10 @@ public interface IEmailSender
         ReferralRequest referralRequest,
         string followUpLink
     );
+
+
+    public void SendComplianceEmail
+    (
+        MemoryStream File1
+    );
 }

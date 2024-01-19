@@ -2,12 +2,15 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IRegularJobsService
 {
     public Task RunNightlyTasksAsync();
+    public Task RunWeeklyTasksAsync();
+
     public Task WriteUnsubmittedReferralRequestToCsv();
     public Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail();
     public Task<DateTime> AddWorkingDaysToDateTime(DateTime initialDateTime, int workingDaysToAdd);
@@ -19,23 +22,44 @@ public class RegularJobsService : IRegularJobsService
     private readonly IS3FileWriter s3FileWriter;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
     private readonly IReferralFollowUpService referralFollowUpManager;
+    private readonly IEmailSender emailSender;
 
     public RegularJobsService(
         IDataAccessProvider dataProvider,
         IS3FileWriter s3FileWriter,
         CsvFileCreator.CsvFileCreator csvFileCreator,
-        IReferralFollowUpService referralFollowUpManager)
+        IReferralFollowUpService referralFollowUpManager, 
+        IEmailSender emailSender
+        )
     {
         this.dataProvider = dataProvider;
         this.s3FileWriter = s3FileWriter;
         this.csvFileCreator = csvFileCreator;
         this.referralFollowUpManager = referralFollowUpManager;
+        this.emailSender = emailSender;
     }
 
     public async Task RunNightlyTasksAsync()
     {
         await WriteUnsubmittedReferralRequestToCsv();
         await GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail();
+    }
+
+    public async Task RunWeeklyTasksAsync()
+    {
+        await SendPolicyTeamUpdate();
+    }
+    private async Task SendPolicyTeamUpdate(){
+        var table1 = await WriteTable1();
+        emailSender.SendComplianceEmail(table1);
+
+    }
+    
+    private async Task<MemoryStream> WriteTable1 (){
+        DateTime endDate = await AddWorkingDaysToDateTime(DateTime.Now, -10); 
+        DateTime startDate = endDate.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+        var newReferrals = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
+        return csvFileCreator.CreateReferralRequestOverviewFileData(newReferrals);
     }
 
     public async Task WriteUnsubmittedReferralRequestToCsv() 
@@ -47,7 +71,7 @@ public class RegularJobsService : IRegularJobsService
             var grouping = referralsByCustodianMonthAndYear.Key;
             var referralsForFile = await dataProvider.GetReferralRequestsByCustodianAndRequestDateAsync(grouping.CustodianCode, grouping.Month, grouping.Year);
 
-            using (var fileData = csvFileCreator.CreateFileData(referralsForFile))
+            using (var fileData = csvFileCreator.CreateReferralRequestFileData(referralsForFile))
             {
                 await s3FileWriter.WriteFileAsync(grouping.CustodianCode, grouping.Month, grouping.Year, fileData);
             }

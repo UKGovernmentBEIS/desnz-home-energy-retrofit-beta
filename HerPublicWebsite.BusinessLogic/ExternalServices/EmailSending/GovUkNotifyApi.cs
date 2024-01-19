@@ -138,7 +138,29 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             SendEmail(emailModel);
 
         }
+        
+        public void SendComplianceEmail(
+                    MemoryStream File1
+                )
+                {
+                    var template = govUkNotifyConfig.ComplianceReportTemplate;
+                    Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
+                    {
+                        { "File1Link", NotificationClient.PrepareUpload(File1.GetBuffer())},
+                        { "File2Link", NotificationClient.PrepareUpload(File1.GetBuffer())},
+                        { "File3Link", NotificationClient.PrepareUpload(File1.GetBuffer())}
+                    };
+                    var emailModel = new GovUkNotifyEmailModel
+                    {
+                        EmailAddress = "calum.pinder@softwire.com",
+                        TemplateId = template.Id,
+                        Personalisation = personalisation
+                    };
+                    SendEmail(emailModel);
+                }    
+
     }
+
 
     internal class GovUkNotifyEmailModel
     {
