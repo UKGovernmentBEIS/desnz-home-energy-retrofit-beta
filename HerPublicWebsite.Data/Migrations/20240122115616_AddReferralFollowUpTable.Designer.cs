@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HerPublicWebsite.Data.Migrations
 {
     [DbContext(typeof(HerDbContext))]
-    [Migration("20240119150005_AddReferralFollowUpTable")]
+    [Migration("20240122115616_AddReferralFollowUpTable")]
     partial class AddReferralFollowUpTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -224,8 +224,13 @@ namespace HerPublicWebsite.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
                     b.Property<DateTime?>("DateOfFollowUpResponse")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("ReferralRequestId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Token")
                         .HasColumnType("text");
@@ -239,6 +244,9 @@ namespace HerPublicWebsite.Data.Migrations
                         .HasColumnType("xid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReferralRequestId")
+                        .IsUnique();
 
                     b.HasIndex("Token")
                         .IsUnique();
@@ -278,7 +286,7 @@ namespace HerPublicWebsite.Data.Migrations
                 {
                     b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
                         .WithOne("FollowUp")
-                        .HasForeignKey("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", "Id")
+                        .HasForeignKey("HerPublicWebsite.BusinessLogic.Models.ReferralRequestFollowUp", "ReferralRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

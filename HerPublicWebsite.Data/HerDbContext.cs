@@ -42,10 +42,6 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         modelBuilder.Entity<ReferralRequest>()
             .Property(rr => rr.RequestDate)
             .HasColumnType("timestamp without time zone");
-        modelBuilder.Entity<ReferralRequest>()
-        .HasOne(e => e.FollowUp)
-        .WithOne(e => e.ReferralRequest)
-        .HasForeignKey<ReferralRequestFollowUp>(e => e.Id);
 
         // Referral request row versioning
         AddRowVersionColumn(modelBuilder.Entity<ReferralRequest>());
