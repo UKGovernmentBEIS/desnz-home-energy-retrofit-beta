@@ -24,13 +24,6 @@ public class ReferralRequestFollowUpController : Controller
         this.regularJobsService = regularJobsService;
     }
 
-
-    [HttpGet("test")]
-    public void test()
-    {
-        regularJobsService.RunWeeklyTasksAsync();
-    }
-
     [HttpGet("already-responded")]
     public IActionResult AlreadyResponded()
     {
