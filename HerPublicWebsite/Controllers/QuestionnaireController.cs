@@ -829,7 +829,6 @@ public class QuestionnaireController : Controller
     {
         var partialViewName = questionnaire.CustodianCode switch
         {
-            "2610" => "Broadland",
             _ => "Default"
         };
         return $"~/Views/Partials/ConfirmationLAMessage/${partialViewName}.cshtml";
