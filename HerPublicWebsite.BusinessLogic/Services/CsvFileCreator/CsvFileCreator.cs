@@ -29,6 +29,24 @@ public class CsvFileCreator
         }
     }
 
+    public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests)
+    {
+        var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
+
+        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            InjectionOptions = InjectionOptions.Strip
+        };
+
+        using var writeableMemoryStream = new MemoryStream();
+        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
+        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
+        {
+            csvWriter.WriteRecords(rows);
+            csvWriter.Flush();
+            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
+        }
+    }
 
     public MemoryStream CreateReferralRequestFollowUpData(IEnumerable<ReferralRequest> referralRequests)
     {
@@ -54,26 +72,27 @@ public class CsvFileCreator
             return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
         }
     }
-
-    public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests)
+    
+    private class CsvRowReferralCodes
     {
-        var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
-
-        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            InjectionOptions = InjectionOptions.Strip
-        };
-
-        using var writeableMemoryStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
-        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
-        {
-            csvWriter.WriteRecords(rows);
-            csvWriter.Flush();
-            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
+        [Index(0)]
+        [Name("Consortium")]
+        public string Consortium { get; set; }
+        
+        [Index(1)]
+        [Name("Local Authority")]
+        public string LocalAuthority { get; set; }
+        
+        [Index(2)]
+        [Name("Referral Code")]
+        public string ReferralCode { get; set; }
+        public CsvRowReferralCodes(ReferralRequest request){
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Consortium;;
+            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Name;;
+            ReferralCode = request.ReferralCode;
         }
     }
-
+    
     private class CsvRowConsortiumFollowUpInformation
     {
         [Index(0)]
@@ -181,26 +200,7 @@ public class CsvFileCreator
             PercentageUncontactedLaReferrals = (float)NumberUncontactedLaReferrals / requestGrouping.Count();
         }
     }
-    private class CsvRowReferralCodes
-    {
-        [Index(0)]
-        [Name("Consortium")]
-        public string Consortium { get; set; }
-        
-        [Index(1)]
-        [Name("Local Authority")]
-        public string LocalAuthority { get; set; }
-        
-        [Index(2)]
-        [Name("Referral Code")]
-        public string ReferralCode { get; set; }
-        public CsvRowReferralCodes(ReferralRequest request){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Consortium;;
-            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Name;;
-            ReferralCode = request.ReferralCode;
-        }
-    }
-    
+
     private class CsvRowReferralRequest
     {
         [Index(0)]
