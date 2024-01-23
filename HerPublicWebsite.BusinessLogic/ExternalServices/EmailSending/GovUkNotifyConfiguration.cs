@@ -16,7 +16,6 @@ public class ReferenceCodeConfiguration
     public string ReferenceCodePlaceholder { get; set; }
     public string LocalAuthorityNamePlaceholder { get; set; }
     public string LocalAuthorityWebsiteUrlPlaceholder { get; set; }
-
 }
 
 public class ReferralFollowUpConfiguration
