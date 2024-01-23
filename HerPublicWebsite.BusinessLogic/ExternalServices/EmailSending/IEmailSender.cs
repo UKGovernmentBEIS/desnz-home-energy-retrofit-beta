@@ -21,6 +21,7 @@ public interface IEmailSender
 
     public void SendComplianceEmail
     (
-        MemoryStream File1
+        MemoryStream File1,
+        MemoryStream File2
     );
 }

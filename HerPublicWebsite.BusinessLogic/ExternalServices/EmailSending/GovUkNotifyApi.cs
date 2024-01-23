@@ -140,15 +140,15 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
         }
         
         public void SendComplianceEmail(
-                    MemoryStream File1
+                    MemoryStream File1,
+                    MemoryStream File2
                 )
                 {
                     var template = govUkNotifyConfig.ComplianceReportTemplate;
                     Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
                     {
-                        { "File1Link", NotificationClient.PrepareUpload(File1.GetBuffer())},
-                        { "File2Link", NotificationClient.PrepareUpload(File1.GetBuffer())},
-                        { "File3Link", NotificationClient.PrepareUpload(File1.GetBuffer())}
+                        { "File1Link", NotificationClient.PrepareUpload(File1.ToArray(), true)},
+                        { "File2Link", NotificationClient.PrepareUpload(File2.ToArray(), true)},
                     };
                     var emailModel = new GovUkNotifyEmailModel
                     {

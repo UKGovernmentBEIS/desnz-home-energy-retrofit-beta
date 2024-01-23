@@ -66,7 +66,8 @@ public class DataAccessProvider : IDataAccessProvider
     public async Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate >= endDate)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate)
+            .Include(rr => rr.FollowUp)
             .ToListAsync();
     }
 

@@ -50,16 +50,24 @@ public class RegularJobsService : IRegularJobsService
         await SendPolicyTeamUpdate();
     }
     private async Task SendPolicyTeamUpdate(){
-        var table1 = await WriteTable1();
-        emailSender.SendComplianceEmail(table1);
+        var table1 = await BuildTable1();
+        var table2 = await BuildTable2();
+        emailSender.SendComplianceEmail(table1, table2);
 
     }
     
-    private async Task<MemoryStream> WriteTable1 (){
+    private async Task<MemoryStream> BuildTable1 (){
         DateTime endDate = await AddWorkingDaysToDateTime(DateTime.Now, -10); 
         DateTime startDate = endDate.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
         var newReferrals = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
         return csvFileCreator.CreateReferralRequestOverviewFileData(newReferrals);
+    }
+
+        private async Task<MemoryStream> BuildTable2 (){
+        DateTime endDate = await AddWorkingDaysToDateTime(DateTime.Now, -10); 
+        DateTime startDate = endDate.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+        var newReferrals = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
+        return csvFileCreator.CreateReferralRequestDownloadInformationData(newReferrals);
     }
 
     public async Task WriteUnsubmittedReferralRequestToCsv() 

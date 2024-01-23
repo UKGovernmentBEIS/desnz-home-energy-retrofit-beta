@@ -34,11 +34,12 @@ public class CsvFileCreator
     {
         var consortiumData = referralRequests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
             .Select(group => new CsvRowConsortiumDownloadInformation(group));
+
         var rows = referralRequests.GroupBy(rr => rr.CustodianCode)
             .Select(group => new CsvRowLaDownloadInformation(
-                group, consortiumData.First(csd => csd.Consortium == group.Key))
+                group, consortiumData.First(csd => csd.Consortium == (LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[group.Key].Consortium ?? "None")))
             );
-
+        
         var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             InjectionOptions = InjectionOptions.Strip
@@ -104,11 +105,11 @@ public class CsvFileCreator
         [Name("Consortium Percentage of Referrals Reported Not Contacted")]
         public float PercentageUncontactedConsortiumReferrals { get; set; }
         public CsvRowConsortiumDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium ?? "None";
             NumberUndownloadedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
             AllConsortiumReferralsDownloaded = NumberUndownloadedConsortiumReferrals == 0;
             PercentageUndownloadedConsortiumReferrals = (float)NumberUndownloadedConsortiumReferrals / requestGrouping.Count();
-            NumberUncontactedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralRequestFollowUp.WasFollowedUp == false ? 1 : 0);
+            NumberUncontactedConsortiumReferrals = requestGrouping.Sum(rr => rr.FollowUp == null ? 0 : rr.FollowUp.WasFollowedUp == false ? 1 : 0);
             AllConsortiumReferralsContacted = NumberUncontactedConsortiumReferrals == 0;
             PercentageUncontactedConsortiumReferrals = (float)NumberUncontactedConsortiumReferrals / requestGrouping.Count();
         }
@@ -133,17 +134,37 @@ public class CsvFileCreator
         public float PercentageUndownloadedConsortiumReferrals { get; set; }
 
         [Index(4)]
+        [Name("Consortium All Referrals Contacted")]
+        public bool AllConsortiumReferralsContacted { get; set; }
+        
+        [Index(5)]
+        [Name("Consortium Number of Referrals Not Contacted")]
+        public int NumberUncontactedConsortiumReferrals { get; set; }
+
+        [Index(6)]
+        [Name("Consortium Percentage of Referrals Not Contacted")]
+        public float PercentageUncontactedConsortiumReferrals { get; set; }
+        
+        [Index(7)]
         [Name("LA")]
         public string LocalAuthority { get; set; }
         
-        [Index(5)]
+        [Index(8)]
         [Name("LA Number of Referrals Not Downloaded")]
         public int NumberUndownloadedLaReferrals { get; set; }
 
-        [Index(6)]
+        [Index(9)]
         [Name("LA Percentage of Referrals Not Downloaded")]
-        
         public float PercentageUndownloadedLaReferrals { get; set; }
+
+        [Index(10)]
+        [Name("LA Number of Referrals Not Contacted")]
+        public int NumberUncontactedLaReferrals { get; set; }
+
+        [Index(11)]
+        [Name("LA Percentage of Referrals Not Contacted")]
+        
+        public float PercentageUncontactedLaReferrals { get; set; }
 
         public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumDownloadInformation consortiumData){
             Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
@@ -151,8 +172,13 @@ public class CsvFileCreator
             AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
             NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
             PercentageUndownloadedConsortiumReferrals = consortiumData.PercentageUndownloadedConsortiumReferrals;
+            AllConsortiumReferralsContacted = consortiumData.AllConsortiumReferralsContacted;
+            NumberUncontactedConsortiumReferrals = consortiumData.NumberUncontactedConsortiumReferrals;
+            PercentageUncontactedConsortiumReferrals = consortiumData.PercentageUncontactedConsortiumReferrals;
             NumberUndownloadedLaReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
             PercentageUndownloadedLaReferrals = (float)NumberUndownloadedLaReferrals/requestGrouping.Count();
+            NumberUncontactedLaReferrals = requestGrouping.Sum(rr => rr.FollowUp == null ? 0 : rr.FollowUp.WasFollowedUp == false ? 1 : 0);
+            PercentageUncontactedLaReferrals = (float)NumberUncontactedLaReferrals / requestGrouping.Count();
         }
     }
     private class CsvRowReferralCodes

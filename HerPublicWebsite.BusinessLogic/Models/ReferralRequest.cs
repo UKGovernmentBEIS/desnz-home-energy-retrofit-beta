@@ -35,6 +35,7 @@ public class ReferralRequest
     public bool FollowUpEmailSent { get; set; } = false;
     
     public ReferralRequestFollowUp? FollowUp {get; set;} = null;
+    
     public string ReferralCode { get; set; }
     
     public ReferralRequest()
