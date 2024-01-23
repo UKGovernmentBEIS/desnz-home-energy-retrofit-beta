@@ -816,20 +816,22 @@ public class QuestionnaireController : Controller
     private static string GetLocalAuthorityPendingMessagePartialViewPath(
         Questionnaire questionnaire)
     {
-        return questionnaire.CustodianCode switch
+        var partialViewName = questionnaire.CustodianCode switch
         {
-            "2610" => "~/Views/Partials/PendingLAMessage/Broadland.cshtml",
-            _ => "~/Views/Partials/PendingLAMessage/Default.cshtml"
+            "2610" => "Broadland",
+            _ => "Default"
         };
+        return $"~/Views/Partials/PendingLAMessage/${partialViewName}.cshtml";
     }
     
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(
         Questionnaire questionnaire)
     {
-        return questionnaire.CustodianCode switch
+        var partialViewName = questionnaire.CustodianCode switch
         {
-            "2610" => "~/Views/Partials/ConfirmationLAMessage/Broadland.cshtml",
-            _ => "~/Views/Partials/ConfirmationLAMessage/Default.cshtml"
+            "2610" => "Broadland",
+            _ => "Default"
         };
+        return $"~/Views/Partials/ConfirmationLAMessage/${partialViewName}.cshtml";
     }
 }
