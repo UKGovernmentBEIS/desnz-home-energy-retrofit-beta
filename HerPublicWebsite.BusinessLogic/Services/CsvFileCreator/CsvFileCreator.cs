@@ -30,10 +30,10 @@ public class CsvFileCreator
     }
 
 
-    public MemoryStream CreateReferralRequestDownloadInformationData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateReferralRequestFollowUpData(IEnumerable<ReferralRequest> referralRequests)
     {
         var consortiumData = referralRequests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
-            .Select(group => new CsvRowConsortiumDownloadInformation(group));
+            .Select(group => new CsvRowConsortiumFollowUpInformation(group));
 
         var rows = referralRequests.GroupBy(rr => rr.CustodianCode)
             .Select(group => new CsvRowLaDownloadInformation(
@@ -74,7 +74,7 @@ public class CsvFileCreator
         }
     }
 
-    private class CsvRowConsortiumDownloadInformation
+    private class CsvRowConsortiumFollowUpInformation
     {
         [Index(0)]
         [Name("Consortium")]
@@ -104,7 +104,7 @@ public class CsvFileCreator
         [Index(6)]
         [Name("Consortium Percentage of Referrals Reported Not Contacted")]
         public float PercentageUncontactedConsortiumReferrals { get; set; }
-        public CsvRowConsortiumDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping){
+        public CsvRowConsortiumFollowUpInformation(IGrouping<string,ReferralRequest> requestGrouping){
             Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium ?? "None";
             NumberUndownloadedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
             AllConsortiumReferralsDownloaded = NumberUndownloadedConsortiumReferrals == 0;
@@ -166,7 +166,7 @@ public class CsvFileCreator
         
         public float PercentageUncontactedLaReferrals { get; set; }
 
-        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumDownloadInformation consortiumData){
+        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumFollowUpInformation consortiumData){
             Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
             LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Name;
             AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;

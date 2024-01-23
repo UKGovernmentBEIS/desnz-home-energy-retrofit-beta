@@ -38,6 +38,15 @@ namespace HerPublicWebsite
                     rjs => rjs.RunNightlyTasksAsync(),
                     "30 0 * * *");
             
+            // Run weekly tasks at 00:30 UTC every Monday
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .AddOrUpdate<RegularJobsService>(
+                    "Nightly tasks",
+                    rjs => rjs.RunWeeklyTasksAsync(),
+                    "30 0 * * 1");
+
             app.Run();
         }
     }

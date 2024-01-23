@@ -63,6 +63,13 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
+    public async Task<IList<ReferralRequest>> GetAllReferralRequests()
+    {
+        return await context.ReferralRequests
+            .Include(rr => rr.FollowUp)
+            .ToListAsync();
+    }
+
     public async Task<IList<ReferralRequest>> GetReferralRequestsBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
