@@ -813,7 +813,7 @@ public class QuestionnaireController : Controller
         }
     }
     
-    private string GetLocalAuthorityPendingMessagePartialViewPath(
+    private static string GetLocalAuthorityPendingMessagePartialViewPath(
         Questionnaire questionnaire)
     {
         return questionnaire.CustodianCode switch
@@ -823,7 +823,7 @@ public class QuestionnaireController : Controller
         };
     }
     
-    private string GetLocalAuthorityConfirmationMessagePartialViewPath(
+    private static string GetLocalAuthorityConfirmationMessagePartialViewPath(
         Questionnaire questionnaire)
     {
         return questionnaire.CustodianCode switch
