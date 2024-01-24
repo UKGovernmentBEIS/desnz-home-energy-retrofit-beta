@@ -30,11 +30,10 @@ public class ReferralRequest
 
     public DateTime RequestDate { get; set; }
 
-    public bool ReferralWrittenToCsv { get; set; } = false;
+    public bool ReferralWrittenToCsv { get; set; }
     
-    public bool FollowUpEmailSent { get; set; } = false;
-    
-    public ReferralRequestFollowUp? FollowUp {get; set;} = null;
+    public bool FollowUpEmailSent { get; set; }
+
     public string ReferralCode { get; set; }
     
     public ReferralRequest()
