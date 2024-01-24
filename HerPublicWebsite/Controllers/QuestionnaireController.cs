@@ -820,7 +820,7 @@ public class QuestionnaireController : Controller
             "2610" => "Broadland",
             _ => "Default"
         };
-        return $"~/Views/Partials/LocalAuthorityMessages/Pending/${partialViewName}.cshtml";
+        return $"~/Views/Partials/LocalAuthorityMessages/Pending/{partialViewName}.cshtml";
     }
     
     private static string GetLocalAuthorityConfirmationMessagePartialViewPath(Questionnaire questionnaire)
@@ -829,6 +829,6 @@ public class QuestionnaireController : Controller
         {
             _ => "Default"
         };
-        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/${partialViewName}.cshtml";
+        return $"~/Views/Partials/LocalAuthorityMessages/Confirmation/{partialViewName}.cshtml";
     }
 }
