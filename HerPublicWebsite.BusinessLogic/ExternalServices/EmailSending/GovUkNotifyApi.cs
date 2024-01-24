@@ -123,7 +123,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.RecipientNamePlaceholder, referralRequest.FullName },
+                { template.ReferralDatePlaceholder, referralRequest.FullName },
                 { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
                 { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
                 { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },

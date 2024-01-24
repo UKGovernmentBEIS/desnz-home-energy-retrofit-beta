@@ -1,11 +1,9 @@
 using System.Threading.Tasks;
 using HerPublicWebsite.Models.ReferralRequestFollowUp;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using HerPublicWebsite.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Models;
-using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 namespace HerPublicWebsite.Controllers;
 
@@ -13,15 +11,10 @@ namespace HerPublicWebsite.Controllers;
 public class ReferralRequestFollowUpController : Controller
 {
     private readonly IReferralFollowUpService referralFollowUpService;
-    private readonly IRegularJobsService regularJobsService;
 
-    public ReferralRequestFollowUpController(
-        IReferralFollowUpService referralFollowUpService,
-        IRegularJobsService regularJobsService
-    )
+    public ReferralRequestFollowUpController(IReferralFollowUpService referralFollowUpService)
     {
         this.referralFollowUpService = referralFollowUpService;
-        this.regularJobsService = regularJobsService;
     }
 
     [HttpGet("already-responded")]

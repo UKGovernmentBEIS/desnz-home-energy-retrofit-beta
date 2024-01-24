@@ -1,4 +1,5 @@
 using Hangfire;
+using HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
 using HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
 using Microsoft.AspNetCore.Builder;
@@ -51,9 +52,9 @@ namespace HerPublicWebsite
             app
                 .Services
                 .GetService<IRecurringJobManager>()
-                .AddOrUpdate<RegularJobsService>(
-                    "Nightly tasks",
-                    rjs => rjs.RunWeeklyTasksAsync(),
+                .AddOrUpdate<PolicyTeamUpdateService>(
+                    "Send policy team update email",
+                    rjs => rjs.SendPolicyTeamUpdate(),
                     "30 0 * * 1");
 
             app.Run();
