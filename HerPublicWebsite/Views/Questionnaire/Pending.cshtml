@@ -27,7 +27,7 @@
         
         <h2 class="govuk-heading-m">What to do next</h2>
         
-        @Html.Partial(Model.LocalAuthorityMessagePartialLocation)
+        @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
         
         <p class="govuk-body">
             If your local authority does not seem right, <a class="govuk-link" href="https://www.gov.uk/find-local-council">find your correct local authority</a> and contact them directly.

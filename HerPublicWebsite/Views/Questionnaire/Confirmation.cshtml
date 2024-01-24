@@ -31,7 +31,7 @@
             <p class="govuk-body">You will receive an email confirmation at <strong>@Model.ConfirmationSentToEmailAddress</strong></p>
         }
 
-        @await Html.PartialAsync(Model.LocalAuthorityMessagePartialLocation)
+        @await Html.PartialAsync(Model.LocalAuthorityMessagePartialViewPath)
 
         @if (Model.LocalAuthorityIsLiveWithHug2)
         {
