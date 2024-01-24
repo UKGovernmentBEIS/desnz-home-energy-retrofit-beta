@@ -72,7 +72,7 @@ public class CsvFileCreator
             return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
         }
     }
-    
+
     private class CsvRowReferralCodes
     {
         [Index(0)]
@@ -87,8 +87,8 @@ public class CsvFileCreator
         [Name("Referral Code")]
         public string ReferralCode { get; set; }
         public CsvRowReferralCodes(ReferralRequest request){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Consortium;;
-            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Name;;
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Consortium;
+            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[request.CustodianCode].Name;
             ReferralCode = request.ReferralCode;
         }
     }
