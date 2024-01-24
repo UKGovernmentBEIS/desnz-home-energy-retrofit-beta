@@ -123,7 +123,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             
             var personalisation = new Dictionary<string, dynamic>
             {
-                { template.ReferralDatePlaceholder, referralRequest.FullName },
+                { template.RecipientNamePlaceholder, referralRequest.FullName },
                 { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
                 { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
                 { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
@@ -162,8 +162,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 }    
 
     }
-
-
+    
     internal class GovUkNotifyEmailModel
     {
         public string EmailAddress { get; set; }

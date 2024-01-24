@@ -55,7 +55,7 @@ public class CsvFileCreator
 
         var rows = referralRequests.GroupBy(rr => rr.CustodianCode)
             .Select(group => new CsvRowLaDownloadInformation(
-                group, consortiumData.First(csd => csd.Consortium == (LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[group.Key].Consortium ?? "None")))
+                group, consortiumData.First(csd => csd.Consortium == (LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[group.Key].Consortium ?? "")))
             );
         
         var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
@@ -124,7 +124,7 @@ public class CsvFileCreator
         [Name("Consortium Percentage of Referrals Reported Not Contacted")]
         public float PercentageUncontactedConsortiumReferrals { get; set; }
         public CsvRowConsortiumFollowUpInformation(IGrouping<string,ReferralRequest> requestGrouping){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium ?? "None";
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium ?? "";
             NumberUndownloadedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
             AllConsortiumReferralsDownloaded = NumberUndownloadedConsortiumReferrals == 0;
             PercentageUndownloadedConsortiumReferrals = (float)NumberUndownloadedConsortiumReferrals / requestGrouping.Count();
@@ -186,7 +186,7 @@ public class CsvFileCreator
         public float PercentageUncontactedLaReferrals { get; set; }
 
         public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumFollowUpInformation consortiumData){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
+            Consortium =  consortiumData.Consortium;
             LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Name;
             AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
             NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
