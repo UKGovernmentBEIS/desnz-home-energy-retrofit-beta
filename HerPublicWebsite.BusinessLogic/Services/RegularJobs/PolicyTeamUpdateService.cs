@@ -42,7 +42,7 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
 
     private async Task<MemoryStream> BuildRecentReferralRequestOverviewTable (){
         DateTime endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10); 
-        DateTime startDate = endDate.AddDays(-(int)DateTime.Today.DayOfWeek + (int)DayOfWeek.Monday);
+        DateTime startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10); 
         var newReferrals = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
         return csvFileCreator.CreateReferralRequestOverviewFileData(newReferrals);
     }
