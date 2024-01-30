@@ -1,6 +1,6 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.S3FileWriter;
 
-namespace HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
+namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IUnsubmittedReferralRequestsService
 {
@@ -23,7 +23,7 @@ public class UnsubmittedReferralRequestsService : IUnsubmittedReferralRequestsSe
         this.csvFileCreator = csvFileCreator;
     }
     
-    public async Task WriteUnsubmittedReferralRequestsToCsv() 
+    public async Task WriteUnsubmittedReferralRequestsToCsv()
     {
         var newReferrals = await dataProvider.GetUnsubmittedReferralRequestsAsync();
 

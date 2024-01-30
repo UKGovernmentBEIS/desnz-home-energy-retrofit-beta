@@ -1,6 +1,6 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 
-namespace HerPublicWebsite.BusinessLogic.Services.WorkingDayHelper;
+namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 public interface IWorkingDayHelperService
 {
@@ -19,7 +19,7 @@ public class WorkingDayHelperService : IWorkingDayHelperService
             newDateTime = newDateTime.AddDays(direction);
             if (newDateTime.DayOfWeek != DayOfWeek.Saturday && 
                 newDateTime.DayOfWeek != DayOfWeek.Sunday && 
-                !holidays.Contains(newDateTime))
+                !holidays.Contains(newDateTime.Date))
             {
                 workingDaysToAdd -= direction;
             }

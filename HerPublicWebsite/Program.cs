@@ -1,6 +1,5 @@
 using Hangfire;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
-using HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +29,12 @@ namespace HerPublicWebsite
             var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
             dbContext.Database.Migrate();
 
+            // Remove deprecated nightly tasks service
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .RemoveIfExists("Nightly tasks");
+            
             // Run nightly tasks at 00:30 UTC daily
             app
                 .Services
@@ -45,7 +50,7 @@ namespace HerPublicWebsite
                 .AddOrUpdate<UnsubmittedReferralRequestsService>(
                     "Write unsubmitted referral requests to csv",
                     rjs => rjs.WriteUnsubmittedReferralRequestsToCsv(),
-                    "30 0 * * *");
+                    "45 0 * * *");
             
             app.Run();
         }
