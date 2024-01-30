@@ -7,7 +7,8 @@ public class ReferralRequestFollowUp
     public string Token {get; set;}
     public bool? WasFollowedUp { get; set; }
     public DateTime? DateOfFollowUpResponse { get; set; }
-    public ReferralRequestFollowUp(){}
+    public ReferralRequestFollowUp() {}
+    
     public ReferralRequestFollowUp(ReferralRequest referralRequest, string token)
     {
         ReferralRequest = referralRequest;
