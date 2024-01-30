@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using HerPublicWebsite.BusinessLogic.Models;
+using HerPublicWebsite.Data.Seeds;
 
 namespace HerPublicWebsite.Data;
 
@@ -24,7 +25,9 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         SetupContactDetails(modelBuilder);
         SetupAnonymisedReports(modelBuilder);
         SetupPerReferralReports(modelBuilder);
-        SetupReferralRequestFollowUpss(modelBuilder);
+        SetupReferralRequestFollowUps(modelBuilder);
+        SetupConsortiums(modelBuilder);
+        SetupLocalAuthorities(modelBuilder);
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)
@@ -98,7 +101,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         AddRowVersionColumn(modelBuilder.Entity<PerReferralReport>());
     }
 
-    private void SetupReferralRequestFollowUpss(ModelBuilder modelBuilder)
+    private void SetupReferralRequestFollowUps(ModelBuilder modelBuilder)
     {
         // Referral request follow up primary key
         modelBuilder.Entity<ReferralRequestFollowUp>()
@@ -116,6 +119,44 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         // Referral request follow up row versioning
         AddRowVersionColumn(modelBuilder.Entity<ReferralRequestFollowUp>());
     }
+        
+    private void SetupConsortiums(ModelBuilder modelBuilder)
+    {
+        // Referral request follow up primary key
+        modelBuilder.Entity<Consortium>()
+            .Property<int>("Id")
+            .HasColumnType("integer")
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<Consortium>()
+            .HasKey("Id");
+        modelBuilder.Entity<Consortium>()
+            .HasIndex(la => la.ConsortiumCode).IsUnique();
+
+        // Referral request follow up row versioning
+        AddRowVersionColumn(modelBuilder.Entity<Consortium>());
+    }
+    
+    private void SetupLocalAuthorities(ModelBuilder modelBuilder)
+    {
+        // Referral request follow up primary key
+        modelBuilder.Entity<LocalAuthority>()
+            .Property<int>("Id")
+            .HasColumnType("integer")
+            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<LocalAuthority>()
+            .HasKey("Id");
+        modelBuilder.Entity<LocalAuthority>()
+            .HasIndex(la => la.CustodianCode).IsUnique();
+        modelBuilder.Entity<LocalAuthority>()
+            .HasOne(la => la.Consortium)
+            .WithMany(c => c.LocalAuthorities)
+            .HasForeignKey(la => la.ConsortiumCode)
+            .HasPrincipalKey(c => c.ConsortiumCode);
+        
+        // Referral request follow up row versioning
+        AddRowVersionColumn(modelBuilder.Entity<LocalAuthority>());
+    }
+
 
     private void AddRowVersionColumn<T>(EntityTypeBuilder<T> builder) where T : class
     {

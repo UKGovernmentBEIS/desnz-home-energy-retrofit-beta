@@ -67,6 +67,75 @@ namespace HerPublicWebsite.Data.Migrations
                     b.ToTable("AnonymisedReports");
                 });
 
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.Consortium", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConsortiumCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsortiumCode")
+                        .IsUnique();
+
+                    b.ToTable("Consortium");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.LocalAuthority", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConsortiumCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustodianCode")
+                        .HasColumnType("text");
+
+                    b.Property<int>("IncomeThreshold")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("WebsiteUrl")
+                        .HasColumnType("text");
+
+                    b.Property<uint>("xmin")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsortiumCode");
+
+                    b.HasIndex("CustodianCode")
+                        .IsUnique();
+
+                    b.ToTable("LocalAuthority");
+                });
+
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
                 {
                     b.Property<int>("Id")
@@ -271,6 +340,16 @@ namespace HerPublicWebsite.Data.Migrations
                     b.ToTable("DataProtectionKeys");
                 });
 
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.LocalAuthority", b =>
+                {
+                    b.HasOne("HerPublicWebsite.BusinessLogic.Models.Consortium", "Consortium")
+                        .WithMany("LocalAuthorities")
+                        .HasForeignKey("ConsortiumCode")
+                        .HasPrincipalKey("ConsortiumCode");
+
+                    b.Navigation("Consortium");
+                });
+
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.NotificationDetails", b =>
                 {
                     b.HasOne("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", "ReferralRequest")
@@ -289,6 +368,11 @@ namespace HerPublicWebsite.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("ReferralRequest");
+                });
+
+            modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.Consortium", b =>
+                {
+                    b.Navigation("LocalAuthorities");
                 });
 
             modelBuilder.Entity("HerPublicWebsite.BusinessLogic.Models.ReferralRequest", b =>
