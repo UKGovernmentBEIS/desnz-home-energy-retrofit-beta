@@ -24,7 +24,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         SetupContactDetails(modelBuilder);
         SetupAnonymisedReports(modelBuilder);
         SetupPerReferralReports(modelBuilder);
-        SetupReferralRequestFollowUpss(modelBuilder);
+        SetupReferralRequestFollowUps(modelBuilder);
     }
 
     private void SetupReferralRequests(ModelBuilder modelBuilder)
@@ -98,7 +98,7 @@ public class HerDbContext : DbContext, IDataProtectionKeyContext
         AddRowVersionColumn(modelBuilder.Entity<PerReferralReport>());
     }
 
-    private void SetupReferralRequestFollowUpss(ModelBuilder modelBuilder)
+    private void SetupReferralRequestFollowUps(ModelBuilder modelBuilder)
     {
         // Referral request follow up primary key
         modelBuilder.Entity<ReferralRequestFollowUp>()
