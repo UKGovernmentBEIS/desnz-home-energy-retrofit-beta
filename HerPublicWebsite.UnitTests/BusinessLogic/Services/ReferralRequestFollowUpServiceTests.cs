@@ -63,7 +63,7 @@ public class ReferralRequestFollowUpServiceTests
     }
 
     [Test]
-    public async Task RecordFollowUpResponseForToken_WhenCalledWithTokenWhereAReferralRequestHasAlreadyBeenFollowedUp_ThrowsInvalidOperationException()
+    public void RecordFollowUpResponseForToken_WhenCalledWithTokenWhereAReferralRequestHasAlreadyBeenFollowedUp_ThrowsInvalidOperationException()
     {
         // Arrange
         string testToken = "testToken";
