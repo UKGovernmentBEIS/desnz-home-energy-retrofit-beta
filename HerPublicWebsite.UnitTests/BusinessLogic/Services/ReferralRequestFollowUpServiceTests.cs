@@ -53,7 +53,7 @@ public class ReferralRequestFollowUpServiceTests
         var newReferralRequest = new ReferralRequestBuilder(1).WithReferralCreated(false).WithRequestDate(new DateTime(2023, 03, 01)).Build();
         var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, testToken);
 
-        mockDataAccessProvider.Setup(dap => dap.GetReferralFollowUpByToken(testToken)).Returns(newReferralRequestFollowUp);
+        mockDataAccessProvider.Setup(dap => dap.GetReferralFollowUpByToken(testToken)).ReturnsAsync(newReferralRequestFollowUp);
         
         // Act
         await referralFollowUpService.RecordFollowUpResponseForToken(testToken, hasFollowedUp);
@@ -73,7 +73,7 @@ public class ReferralRequestFollowUpServiceTests
             WasFollowedUp = true
         };
 
-        mockDataAccessProvider.Setup(dap => dap.GetReferralFollowUpByToken(testToken)).Returns(newReferralRequestFollowUp);
+        mockDataAccessProvider.Setup(dap => dap.GetReferralFollowUpByToken(testToken)).ReturnsAsync(newReferralRequestFollowUp);
         
         // Act
         // Assert

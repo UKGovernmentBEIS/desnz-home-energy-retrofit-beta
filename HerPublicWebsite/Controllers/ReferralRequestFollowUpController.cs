@@ -27,9 +27,9 @@ public class ReferralRequestFollowUpController : Controller
     }
 
     [HttpGet("respond-page/{token}")]
-    public IActionResult RespondPage_Get(string token)
+    public async Task<IActionResult> RespondPage_Get(string token)
     {
-        ReferralRequestFollowUp referralRequestFollowUp = referralFollowUpService.GetReferralRequestFollowUpByToken(token);
+        ReferralRequestFollowUp referralRequestFollowUp = await referralFollowUpService.GetReferralRequestFollowUpByToken(token);
         if (referralRequestFollowUp.WasFollowedUp is not null) {
             return RedirectToAction(nameof(AlreadyResponded), "ReferralRequestFollowUp");
         } else {  

@@ -5,7 +5,7 @@ namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 public interface IReferralFollowUpService
 {
     public Task<ReferralRequestFollowUp> CreateReferralRequestFollowUp(ReferralRequest referralRequest);
-    public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token);
+    public Task<ReferralRequestFollowUp> GetReferralRequestFollowUpByToken(string token);
     public Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp);
 }
 
@@ -26,13 +26,13 @@ public class ReferralFollowUpService : IReferralFollowUpService
         await dataAccessProvider.PersistReferralFollowUpToken(referralRequestFollowUp);
         return referralRequestFollowUp;
     }
-    public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)
+    public async Task<ReferralRequestFollowUp> GetReferralRequestFollowUpByToken(string token)
     {
-        return dataAccessProvider.GetReferralFollowUpByToken(token);
+        return await dataAccessProvider.GetReferralFollowUpByToken(token);
     }
     public async Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp)
     {
-        var referralRequestFollowUp = dataAccessProvider.GetReferralFollowUpByToken(token);
+        var referralRequestFollowUp = await dataAccessProvider.GetReferralFollowUpByToken(token);
         if (referralRequestFollowUp.WasFollowedUp is not null){
             throw new InvalidOperationException();
         }

@@ -85,9 +85,9 @@ public class DataAccessProvider : IDataAccessProvider
         return referralRequestFollowUp;
     }
 
-    public ReferralRequestFollowUp GetReferralFollowUpByToken(string token)
+    public async Task<ReferralRequestFollowUp> GetReferralFollowUpByToken(string token)
     {
-        return context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest).Single(rrfu => rrfu.Token == token);
+        return await context.ReferralRequestFollowUps.Include(rrfu => rrfu.ReferralRequest).SingleAsync(rrfu => rrfu.Token == token);
     }
     
     public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp)
