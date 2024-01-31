@@ -1,5 +1,5 @@
 using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-using HerPublicWebsite.BusinessLogic.Services.WorkingDayHelper;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
 namespace HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
 
