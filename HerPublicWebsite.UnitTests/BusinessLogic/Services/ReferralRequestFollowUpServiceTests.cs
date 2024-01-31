@@ -34,13 +34,13 @@ public class ReferralRequestFollowUpServiceTests
         var newReferralRequestFollowUp = new ReferralRequestFollowUp(newReferralRequest, testToken);
 
         mockGuidService.Setup(gs => gs.NewGuidString()).Returns(testToken);
-        mockDataAccessProvider.Setup(dap => dap.AddReferralFollowUpToken(newReferralRequestFollowUp).Result).Returns(newReferralRequestFollowUp);
+        mockDataAccessProvider.Setup(dap => dap.PersistReferralFollowUpToken(newReferralRequestFollowUp).Result).Returns(newReferralRequestFollowUp);
      
         // Act
         var referralRequestFollowUp = await referralFollowUpService.CreateReferralRequestFollowUp(newReferralRequest);
 
         // Assert
-        mockDataAccessProvider.Verify(dap => dap.AddReferralFollowUpToken(It.Is<ReferralRequestFollowUp>(rrfu => rrfu.Token == newReferralRequestFollowUp.Token && rrfu.ReferralRequest == newReferralRequestFollowUp.ReferralRequest)));
+        mockDataAccessProvider.Verify(dap => dap.PersistReferralFollowUpToken(It.Is<ReferralRequestFollowUp>(rrfu => rrfu.Token == newReferralRequestFollowUp.Token && rrfu.ReferralRequest == newReferralRequestFollowUp.ReferralRequest)));
         referralRequestFollowUp.Should().BeEquivalentTo(newReferralRequestFollowUp);
     }
     

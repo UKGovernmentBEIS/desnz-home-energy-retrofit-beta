@@ -23,7 +23,7 @@ public class ReferralFollowUpService : IReferralFollowUpService
     {
         var token = GenerateFollowUpToken();
         var referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
-        await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
+        await dataAccessProvider.PersistReferralFollowUpToken(referralRequestFollowUp);
         return referralRequestFollowUp;
     }
     public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)

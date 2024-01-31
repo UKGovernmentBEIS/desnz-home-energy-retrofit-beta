@@ -77,7 +77,7 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<ReferralRequestFollowUp> AddReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp)
+    public async Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp)
     {
         context.ReferralRequestFollowUps
             .Add(referralRequestFollowUp);

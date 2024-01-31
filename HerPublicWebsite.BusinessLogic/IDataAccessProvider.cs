@@ -12,7 +12,7 @@ public interface IDataAccessProvider
     Task<AnonymisedReport> PersistAnonymisedReportAsync(AnonymisedReport report);
     Task<PerReferralReport> PersistPerReferralReportAsync(PerReferralReport report);
     Task PersistAllChangesAsync();
-    Task<ReferralRequestFollowUp> AddReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp);
+    Task<ReferralRequestFollowUp> PersistReferralFollowUpToken(ReferralRequestFollowUp referralRequestFollowUp);
     ReferralRequestFollowUp GetReferralFollowUpByToken(string token);
     Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp);
 }
