@@ -25,11 +25,11 @@ public class ReferralFollowUpService : IReferralFollowUpService
 
     public async Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest)
     {
-        string token = GenerateFollowUpToken();
+        var token = GenerateFollowUpToken();
 
-        string followUpLink = "https://localhost:5001/referral-follow-up/respond-page/" + token;
+        var followUpLink = "https://localhost:5001/referral-follow-up/respond-page/" + token;
         
-        ReferralRequestFollowUp referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
+        var referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
         await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
 
         this.emailSender.SendFollowUpEmail(
@@ -42,7 +42,7 @@ public class ReferralFollowUpService : IReferralFollowUpService
     }
     public async Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp)
     {
-        ReferralRequestFollowUp referralRequestFollowUp = dataAccessProvider.GetReferralFollowUpByToken(token);
+        var referralRequestFollowUp = dataAccessProvider.GetReferralFollowUpByToken(token);
         if (referralRequestFollowUp.WasFollowedUp is not null){
             throw new InvalidOperationException();
         }
