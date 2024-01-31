@@ -32,9 +32,7 @@ public class ReferralFollowUpService : IReferralFollowUpService
         var referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
         await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
 
-        this.emailSender.SendFollowUpEmail(
-            referralRequest,
-                 followUpLink);
+        emailSender.SendFollowUpEmail(referralRequest, followUpLink);
     }
     public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)
     {
