@@ -6,6 +6,7 @@ using Community.Microsoft.Extensions.Caching.PostgreSql;
 using GovUkDesignSystem.ModelBinders;
 using Hangfire;
 using Hangfire.PostgreSql;
+using HerPortal.BusinessLogic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -68,7 +69,6 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
-            services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
             services.AddScoped<IUnsubmittedReferralRequestsService, UnsubmittedReferralRequestsService>();
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
 
@@ -77,6 +77,7 @@ namespace HerPublicWebsite
             // This allows encrypted cookies to be understood across multiple web server instances
             services.AddDataProtection().PersistKeysToDbContext<HerDbContext>();
 
+            ConfigureReferralFollowUpNotificationService(services);
             ConfigureS3Client(services);
             ConfigureS3FileWriter(services);
             ConfigureEpcApi(services);
@@ -207,6 +208,13 @@ namespace HerPublicWebsite
                 configuration.GetSection(S3Configuration.ConfigSection));
             services.AddScoped<IS3FileWriter, S3FileWriter>();
             services.AddScoped<S3ReferralFileKeyGenerator>();
+        }
+        
+        private void ConfigureReferralFollowUpNotificationService(IServiceCollection services)
+        {
+            services.Configure<ReferralFollowUpNotificationServiceConfiguration>(
+                configuration.GetSection(ReferralFollowUpNotificationServiceConfiguration.ConfigSection));
+            services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -22,6 +22,14 @@ public class DataAccessProvider : IDataAccessProvider
         return referralRequest;
     }
 
+    public async Task<ReferralRequest> UpdateReferralRequestByIdWithFollowUpSentAsync(int id)
+    {   
+        var referralRequest = await context.ReferralRequests.SingleAsync(rr => rr.Id == id);
+        referralRequest.FollowUpEmailSent = true;
+        await context.SaveChangesAsync();
+        return referralRequest;
+    }
+
     public async Task PersistNotificationConsentAsync(string referralCode, NotificationDetails details)
     {
         if (details.FutureSchemeNotificationConsent)

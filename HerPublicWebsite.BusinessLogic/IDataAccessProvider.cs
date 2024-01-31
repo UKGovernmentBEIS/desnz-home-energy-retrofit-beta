@@ -5,6 +5,7 @@ namespace HerPublicWebsite.BusinessLogic;
 public interface IDataAccessProvider
 {
     Task<ReferralRequest> PersistNewReferralRequestAsync(ReferralRequest referralRequest);
+    Task<ReferralRequest> UpdateReferralRequestByIdWithFollowUpSentAsync(int id);
     Task PersistNotificationConsentAsync(string referralId, NotificationDetails notificationDetails);
     Task<IList<ReferralRequest>> GetUnsubmittedReferralRequestsAsync();
     Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBeforeDate(DateTime date);

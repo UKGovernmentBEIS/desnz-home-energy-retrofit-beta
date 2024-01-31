@@ -23,7 +23,7 @@ public class ReferralRequestFollowUpController : Controller
     [HttpGet("already-responded")]
     public IActionResult AlreadyResponded()
     {
-         return View("ReferralRequestFollowUpAlreadyResponded");
+         return View("AlreadyResponded");
     }
 
     [HttpGet("")]
@@ -39,7 +39,7 @@ public class ReferralRequestFollowUpController : Controller
                 ReferralCode = referralRequestFollowUp.ReferralRequest.ReferralCode, 
                 RequestDate = referralRequestFollowUp.ReferralRequest.RequestDate
             };
-            return View("ReferralRequestFollowUpResponsePage", viewModel);
+            return View("ResponsePage", viewModel);
         }
     }
 
@@ -53,6 +53,6 @@ public class ReferralRequestFollowUpController : Controller
     [HttpGet("response-recorded")]
     public IActionResult ResponseRecorded()
     {
-         return View("ReferralRequestFollowUpResponseRecorded");
+         return View("ResponseRecorded");
     }
 }
