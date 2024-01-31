@@ -13,39 +13,13 @@ public class CsvFileCreator
     public MemoryStream CreateReferralRequestFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRowReferralRequest(rr));
-
-        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            InjectionOptions = InjectionOptions.Strip
-        };
-
-        using var writeableMemoryStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
-        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
-        {
-            csvWriter.WriteRecords(rows);
-            csvWriter.Flush();
-            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
-        }
+        return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
     public MemoryStream CreateReferralRequestOverviewFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var rows = referralRequests.Select(rr => new CsvRowReferralCodes(rr));
-
-        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            InjectionOptions = InjectionOptions.Strip
-        };
-
-        using var writeableMemoryStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
-        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
-        {
-            csvWriter.WriteRecords(rows);
-            csvWriter.Flush();
-            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
-        }
+        return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
     public MemoryStream CreateReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
@@ -58,19 +32,7 @@ public class CsvFileCreator
                 group, consortiumData.First(csd => csd.Consortium == (LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[group.Key].Consortium ?? "")))
             );
         
-        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            InjectionOptions = InjectionOptions.Strip
-        };
-
-        using var writeableMemoryStream = new MemoryStream();
-        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
-        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
-        {
-            csvWriter.WriteRecords(rows);
-            csvWriter.Flush();
-            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
-        }
+        return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
     private class CsvRowReferralCodes
@@ -318,6 +280,23 @@ public class CsvFileCreator
             };
             EligiblePostcode = request.IsLsoaProperty;
             Tenure = "Owner";
+        }
+    }
+
+    private MemoryStream GenerateCsvMemoryStreamFromFileRows<T>(IEnumerable<T> rows)
+    {
+        var csvConfiguration = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            InjectionOptions = InjectionOptions.Strip
+        };
+
+        using var writeableMemoryStream = new MemoryStream();
+        using var streamWriter = new StreamWriter(writeableMemoryStream, Encoding.UTF8);
+        using var csvWriter = new CsvWriter(streamWriter, csvConfiguration);
+        {
+            csvWriter.WriteRecords(rows);
+            csvWriter.Flush();
+            return new MemoryStream(writeableMemoryStream.GetBuffer(), 0, (int)writeableMemoryStream.Length, false);
         }
     }
 }
