@@ -55,7 +55,7 @@ namespace HerPublicWebsite
                 .AddOrUpdate<PolicyTeamUpdateService>(
                     "Send policy team update email",
                     rjs => rjs.SendPolicyTeamUpdate(),
-                    "30 0 * * 1");
+                    "0 7 * * 1");
 
             app.Run();
         }
