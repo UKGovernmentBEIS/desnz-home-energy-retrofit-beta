@@ -20,8 +20,8 @@ public interface IEmailSender
     
     public void SendComplianceEmail
     (
-        MemoryStream recentReferralRequestOverviewTable,
-        MemoryStream recentReferralRequestFollowUpTable,
-        MemoryStream historicReferralRequestFollowUpTable
+        MemoryStream recentReferralRequestOverviewFileData,
+        MemoryStream recentReferralRequestFollowUpFileData,
+        MemoryStream historicReferralRequestFollowUpFileData
     );
 }

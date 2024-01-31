@@ -48,7 +48,7 @@ public class CsvFileCreator
         }
     }
 
-    public MemoryStream CreateReferralRequestFollowUpData(IEnumerable<ReferralRequest> referralRequests)
+    public MemoryStream CreateReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
     {
         var consortiumData = referralRequests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
             .Select(group => new CsvRowConsortiumFollowUpInformation(group));

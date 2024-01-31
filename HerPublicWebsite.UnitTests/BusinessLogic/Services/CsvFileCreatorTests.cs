@@ -186,7 +186,7 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
         var referralRequests = new List<ReferralRequest>() { referralRequest1, referralRequest2, referralRequest3, referralRequest4, referralRequest5, referralRequest6, referralRequest7, referralRequest8 };
 
         // Act
-        var data = underTest.CreateReferralRequestFollowUpData(referralRequests);
+        var data = underTest.CreateReferralRequestFollowUpFileData(referralRequests);
         
         // Assert
         var reader = new StreamReader(data, Encoding.UTF8);

@@ -29,33 +29,33 @@ public class PolicyTeamUpdateService : IPolicyTeamUpdate
     }
 
     public async Task SendPolicyTeamUpdate(){
-        var recentReferralRequestOverviewTable = await BuildRecentReferralRequestOverviewTable();
-        var recentReferralRequestFollowUpTable = await BuildRecentReferralRequestFollowUpTable();
-        var historicReferralRequestFollowUpTable = await BuildHistoricReferralRequestFollowUpTable();
+        var recentReferralRequestOverviewFileData = await CreateReferralRequestOverviewFileData();
+        var recentReferralRequestFollowUpFileData = await BuildRecentReferralRequestFollowUpFileData();
+        var historicReferralRequestFollowUpFileData = await BuildHistoricReferralRequestFollowUpFileData();
         emailSender.SendComplianceEmail(
-            recentReferralRequestOverviewTable,
-            recentReferralRequestFollowUpTable,
-            historicReferralRequestFollowUpTable
+            recentReferralRequestOverviewFileData,
+            recentReferralRequestFollowUpFileData,
+            historicReferralRequestFollowUpFileData
         );
 
     }
 
-    private async Task<MemoryStream> BuildRecentReferralRequestOverviewTable (){
+    private async Task<MemoryStream> CreateReferralRequestOverviewFileData (){
         DateTime endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10); 
         DateTime startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10); 
         var newReferrals = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
         return csvFileCreator.CreateReferralRequestOverviewFileData(newReferrals);
     }
 
-    private async Task<MemoryStream> BuildRecentReferralRequestFollowUpTable (){
+    private async Task<MemoryStream> BuildRecentReferralRequestFollowUpFileData (){
         DateTime endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now, -10); 
         DateTime startDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Now.AddDays(-7), -10); 
         var newReferrals = await dataProvider.GetReferralRequestsBetweenDates(startDate, endDate);
-        return csvFileCreator.CreateReferralRequestFollowUpData(newReferrals);
+        return csvFileCreator.CreateReferralRequestFollowUpFileData(newReferrals);
     }
 
-    private async Task<MemoryStream> BuildHistoricReferralRequestFollowUpTable (){
+    private async Task<MemoryStream> BuildHistoricReferralRequestFollowUpFileData (){
         var newReferrals = await dataProvider.GetAllReferralRequests();
-        return csvFileCreator.CreateReferralRequestFollowUpData(newReferrals);
+        return csvFileCreator.CreateReferralRequestFollowUpFileData(newReferrals);
     }
 }
