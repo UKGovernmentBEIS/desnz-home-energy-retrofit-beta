@@ -92,7 +92,7 @@ public class DataAccessProvider : IDataAccessProvider
     
     public async Task<ReferralRequestFollowUp> UpdateReferralFollowUpByTokenWithWasFollowedUp(string token, bool wasFollowedUp)
     {   
-        ReferralRequestFollowUp referralRequestFollowUp = context.ReferralRequestFollowUps.Single(rrfu => rrfu.Token == token);
+        var referralRequestFollowUp = await context.ReferralRequestFollowUps.SingleAsync(rrfu => rrfu.Token == token);
         referralRequestFollowUp.WasFollowedUp = wasFollowedUp;
         referralRequestFollowUp.DateOfFollowUpResponse = DateTime.Now;
         await context.SaveChangesAsync();
