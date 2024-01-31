@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using HerPublicWebsite.Models.ReferralRequestFollowUp;
 using Microsoft.AspNetCore.Mvc;
@@ -20,13 +21,13 @@ public class ReferralRequestFollowUpController : Controller
     [HttpGet("already-responded")]
     public IActionResult AlreadyResponded()
     {
-         return View("ReferralRequestFollowUpAlreadyResponded");
+         return View("AlreadyResponded");
     }
 
-    [HttpGet("respond-page/{token}")]
-    public IActionResult RespondPage_Get(string token)
+    [HttpGet("")]
+    public async Task<IActionResult> RespondPage_Get([Required] string token)
     {
-        ReferralRequestFollowUp referralRequestFollowUp = referralFollowUpService.GetReferralRequestFollowUpByToken(token);
+        ReferralRequestFollowUp referralRequestFollowUp = await referralFollowUpService.GetReferralRequestFollowUpByToken(token);
         if (referralRequestFollowUp.WasFollowedUp is not null) {
             return RedirectToAction(nameof(AlreadyResponded), "ReferralRequestFollowUp");
         } else {  
@@ -36,20 +37,20 @@ public class ReferralRequestFollowUpController : Controller
                 ReferralCode = referralRequestFollowUp.ReferralRequest.ReferralCode, 
                 RequestDate = referralRequestFollowUp.ReferralRequest.RequestDate
             };
-            return View("ReferralRequestFollowUpResponsePage", viewModel);
+            return View("ResponsePage", viewModel);
         }
     }
 
-    [HttpPost("respond-page/{token}")]
+    [HttpPost("")]
     public async Task<IActionResult> RespondPage_Post(ReferralRequestFollowUpResponsePageViewModel viewModel)
     {
-        await referralFollowUpService.RecordFollowUpResponseForToken(viewModel!.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
+        await referralFollowUpService.RecordFollowUpResponseForToken(viewModel.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
         return RedirectToAction(nameof(ResponseRecorded), "ReferralRequestFollowUp");
     }
 
     [HttpGet("response-recorded")]
     public IActionResult ResponseRecorded()
     {
-         return View("ReferralRequestFollowUpResponseRecorded");
+         return View("ResponseRecorded");
     }
 }

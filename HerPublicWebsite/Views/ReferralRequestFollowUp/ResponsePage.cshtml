@@ -1,9 +1,7 @@
 @using GovUkDesignSystem
 @using GovUkDesignSystem.GovUkDesignSystemComponents
-@using HerPublicWebsite.BusinessLogic.Models.Enums
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using HerPublicWebsite.Controllers
-@using HerPublicWebsite.Models.Enums
 
 @model HerPublicWebsite.Models.ReferralRequestFollowUp.ReferralRequestFollowUpResponsePageViewModel
 
@@ -21,22 +19,23 @@
         </div>
         <form action="@Url.Action(nameof(ReferralRequestFollowUpController.RespondPage_Post), "ReferralRequestFollowUp")" method="post" novalidate>
             @Html.AntiForgeryToken()
-                @await Html.GovUkRadiosFor(
-                    m => m.HasFollowedUp,
-                    fieldsetOptions: new FieldsetViewModel
+            @Html.HiddenFor(m => m.Token)
+            @await Html.GovUkRadiosFor(
+                m => m.HasFollowedUp,
+                fieldsetOptions: new FieldsetViewModel
+                {
+                    Legend = new LegendViewModel
                     {
-                        Legend = new LegendViewModel
+                        Text = "Have you been contacted by your LA (or their official contractor)?",
+                        Classes = "govuk-fieldset__legend--m",
+                    },
+                })
+            <div class="govuk-button-group">
+                @(await Html.GovUkButton(new ButtonViewModel
                         {
-                            Text = "Have you been contacted by your LA (or their official contractor)?",
-                            Classes = "govuk-fieldset__legend--m",
-                        },
-                    })
-                <div class="govuk-button-group">
-                    @(await Html.GovUkButton(new ButtonViewModel
-                            {
-                                Text = "Submit",
-                            }))
-                </div>
+                            Text = "Submit",
+                        }))
+            </div>
         </form>
     </div>
 </div>

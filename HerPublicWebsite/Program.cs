@@ -1,7 +1,6 @@
 using Hangfire;
 using HerPublicWebsite.BusinessLogic.Services.PolicyTeamUpdate;
-using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUp;
-using HerPublicWebsite.BusinessLogic.Services.UnsubmittedReferralRequests;
+using HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -31,13 +30,19 @@ namespace HerPublicWebsite
             var dbContext = scope.ServiceProvider.GetRequiredService<HerDbContext>();
             dbContext.Database.Migrate();
 
+            // Remove deprecated nightly tasks service
+            app
+                .Services
+                .GetService<IRecurringJobManager>()
+                .RemoveIfExists("Nightly tasks");
+            
             // Run nightly tasks at 00:30 UTC daily
             app
                 .Services
                 .GetService<IRecurringJobManager>()
-                .AddOrUpdate<ReferralFollowUpJobService>(
+                .AddOrUpdate<ReferralFollowUpNotificationService>(
                     "Get referrals passed ten day working threshold with no follow up",
-                    rjs => rjs.GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail(),
+                    rjs => rjs.SendReferralFollowUpNotifications(),
                     "30 0 * * *");
             
             app
@@ -46,7 +51,7 @@ namespace HerPublicWebsite
                 .AddOrUpdate<UnsubmittedReferralRequestsService>(
                     "Write unsubmitted referral requests to csv",
                     rjs => rjs.WriteUnsubmittedReferralRequestsToCsv(),
-                    "30 0 * * *");
+                    "45 0 * * *");
             
             // Run weekly tasks at 00:30 UTC every Monday
             app

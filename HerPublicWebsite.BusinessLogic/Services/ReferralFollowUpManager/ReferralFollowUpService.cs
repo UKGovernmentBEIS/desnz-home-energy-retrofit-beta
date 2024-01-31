@@ -1,48 +1,38 @@
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 public interface IReferralFollowUpService
 {
-    public Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest);
-    public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token);
+    public Task<ReferralRequestFollowUp> CreateReferralRequestFollowUp(ReferralRequest referralRequest);
+    public Task<ReferralRequestFollowUp> GetReferralRequestFollowUpByToken(string token);
     public Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp);
 }
 
 public class ReferralFollowUpService : IReferralFollowUpService
 {
-    private readonly IEmailSender emailSender;
     private readonly IDataAccessProvider dataAccessProvider;
     private readonly IGuidService guidService;
-    public ReferralFollowUpService(IEmailSender emailSender, IDataAccessProvider dataAccessProvider, IGuidService guidService)
+    public ReferralFollowUpService(IDataAccessProvider dataAccessProvider, IGuidService guidService)
     {
-        this.emailSender = emailSender;
         this.dataAccessProvider = dataAccessProvider;
         this.guidService = guidService;
     }
 
-    public async Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest)
+    public async Task<ReferralRequestFollowUp> CreateReferralRequestFollowUp(ReferralRequest referralRequest)
     {
-        string token = GenerateFollowUpToken();
-
-        string followUpLink = "https://localhost:5001/referral-follow-up/respond-page/" + token;
-        
-        ReferralRequestFollowUp referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
-        await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
-
-        this.emailSender.SendFollowUpEmail(
-            referralRequest,
-                 followUpLink);
+        var token = GenerateFollowUpToken();
+        var referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
+        await dataAccessProvider.PersistReferralFollowUpToken(referralRequestFollowUp);
+        return referralRequestFollowUp;
     }
-    public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)
+    public async Task<ReferralRequestFollowUp> GetReferralRequestFollowUpByToken(string token)
     {
-        return dataAccessProvider.GetReferralFollowUpByToken(token);
+        return await dataAccessProvider.GetReferralFollowUpByToken(token);
     }
     public async Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp)
     {
-        ReferralRequestFollowUp referralRequestFollowUp = dataAccessProvider.GetReferralFollowUpByToken(token);
+        var referralRequestFollowUp = await dataAccessProvider.GetReferralFollowUpByToken(token);
         if (referralRequestFollowUp.WasFollowedUp is not null){
             throw new InvalidOperationException();
         }
