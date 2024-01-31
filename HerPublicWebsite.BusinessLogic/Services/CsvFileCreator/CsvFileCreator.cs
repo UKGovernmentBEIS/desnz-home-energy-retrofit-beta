@@ -182,8 +182,15 @@ public class CsvFileCreator
 
         [Index(11)]
         [Name("LA Percentage of Referrals Not Contacted")]
-        
         public float PercentageUncontactedLaReferrals { get; set; }
+        
+        [Index(12)]
+        [Name("LA Number of Referrals Responded to email")]
+        public float LaNumberOfFollowUpResponses { get; set; }
+        
+        [Index(13)]
+        [Name("LA Percentage of Referrals Responded to email")]
+        public float LaPercentageOfFollowUpResponses { get; set; }
 
         public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumFollowUpInformation consortiumData){
             Consortium =  consortiumData.Consortium;
@@ -198,6 +205,8 @@ public class CsvFileCreator
             PercentageUndownloadedLaReferrals = (float)NumberUndownloadedLaReferrals/requestGrouping.Count();
             NumberUncontactedLaReferrals = requestGrouping.Sum(rr => rr.FollowUp == null ? 0 : rr.FollowUp.WasFollowedUp == false ? 1 : 0);
             PercentageUncontactedLaReferrals = (float)NumberUncontactedLaReferrals / requestGrouping.Count();
+            LaNumberOfFollowUpResponses = requestGrouping.Sum(rr => rr.FollowUp.WasFollowedUp == null ? 0 : 1);
+            LaPercentageOfFollowUpResponses = LaNumberOfFollowUpResponses / requestGrouping.Count();
         }
     }
 
