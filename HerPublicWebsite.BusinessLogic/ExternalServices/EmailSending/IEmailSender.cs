@@ -15,6 +15,6 @@ public interface IEmailSender
     public void SendFollowUpEmail
     (
         ReferralRequest referralRequest,
-        string token
+        string followUpLink
     );
 }

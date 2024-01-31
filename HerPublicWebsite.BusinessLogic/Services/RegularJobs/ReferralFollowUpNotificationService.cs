@@ -37,7 +37,7 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
         var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBeforeDate(endDate);
         foreach (var newReferral in newReferrals) {
             var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(newReferral);
-            emailSender.SendFollowUpEmail(newReferral, referralRequestFollowUp.Token);
+            emailSender.SendFollowUpEmail(newReferral, "https://localhost:5001/referral-follow-up?token=" + referralRequestFollowUp.Token);
         }
     }
 }

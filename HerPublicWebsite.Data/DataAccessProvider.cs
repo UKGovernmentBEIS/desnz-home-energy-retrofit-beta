@@ -29,8 +29,8 @@ public class DataAccessProvider : IDataAccessProvider
             if (referralCode is not null)
             {
                 var referralRequest =
-                    context.ReferralRequests
-                    .Single(rr => rr.ReferralCode == referralCode);
+                    await context.ReferralRequests
+                    .SingleAsync(rr => rr.ReferralCode == referralCode);
 
                 details.ReferralRequest = referralRequest;
             }

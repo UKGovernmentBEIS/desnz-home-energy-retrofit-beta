@@ -1,7 +1,7 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using HerPublicWebsite.Models.ReferralRequestFollowUp;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using HerPublicWebsite.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Models;
@@ -26,8 +26,8 @@ public class ReferralRequestFollowUpController : Controller
          return View("ReferralRequestFollowUpAlreadyResponded");
     }
 
-    [HttpGet("respond-page/{token}")]
-    public async Task<IActionResult> RespondPage_Get(string token)
+    [HttpGet("")]
+    public async Task<IActionResult> RespondPage_Get([Required] string token)
     {
         ReferralRequestFollowUp referralRequestFollowUp = await referralFollowUpService.GetReferralRequestFollowUpByToken(token);
         if (referralRequestFollowUp.WasFollowedUp is not null) {
@@ -43,10 +43,10 @@ public class ReferralRequestFollowUpController : Controller
         }
     }
 
-    [HttpPost("respond-page/{token}")]
+    [HttpPost("")]
     public async Task<IActionResult> RespondPage_Post(ReferralRequestFollowUpResponsePageViewModel viewModel)
     {
-        await referralFollowUpService.RecordFollowUpResponseForToken(viewModel!.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
+        await referralFollowUpService.RecordFollowUpResponseForToken(viewModel.Token, viewModel.HasFollowedUp is YesOrNo.Yes);
         return RedirectToAction(nameof(ResponseRecorded), "ReferralRequestFollowUp");
     }
 

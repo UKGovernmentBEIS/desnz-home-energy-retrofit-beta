@@ -98,7 +98,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
         public void SendFollowUpEmail
         (
             ReferralRequest referralRequest,
-            string token
+            string followUpLink
         ) {
             var template = govUkNotifyConfig.ReferralFollowUpTemplate;
             LocalAuthorityData.LocalAuthorityDetails localAuthorityDetails;
@@ -127,8 +127,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
                 { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
                 { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
-                { template.FollowUpLinkPlaceholder, "https://localhost:5001/referral-follow-up/respond-page/" + token
-                },
+                { template.FollowUpLinkPlaceholder, followUpLink },
             };
             var emailModel = new GovUkNotifyEmailModel
             {
