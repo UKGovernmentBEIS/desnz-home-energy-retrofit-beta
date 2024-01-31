@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using HerPublicWebsite.BusinessLogic;
@@ -8,7 +7,6 @@ using NUnit.Framework;
 using Moq;
 using Tests.Builders;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 
 namespace Tests.BusinessLogic.Services;
 
@@ -16,21 +14,19 @@ namespace Tests.BusinessLogic.Services;
 public class ReferralRequestFollowUpServiceTests
 {
     private IReferralFollowUpService referralFollowUpService;
-    private Mock<IEmailSender> mockEmailSender;
     private Mock<IDataAccessProvider> mockDataAccessProvider;
     private Mock<IGuidService> mockGuidService;
 
     [SetUp]
     public void Setup()
     {
-        mockEmailSender = new Mock<IEmailSender>();
         mockDataAccessProvider = new Mock<IDataAccessProvider>();
         mockGuidService = new Mock<IGuidService>();
-        referralFollowUpService = new ReferralFollowUpService(mockEmailSender.Object, mockDataAccessProvider.Object, mockGuidService.Object);
+        referralFollowUpService = new ReferralFollowUpService(mockDataAccessProvider.Object, mockGuidService.Object);
     }
 
     [Test]
-    public async Task GenerateAndSendFollowUpEmail_WhenCalledWithNewReferral_CreatesANewReferralRequestFollowUpInTheDbAndSendsTokenInEmail()
+    public async Task CreateReferralRequestFollowUp_WhenCalledWithNewReferral_CreatesANewReferralRequestFollowUpInTheDb()
     {
         // Arrange
         string testToken = "testToken";
@@ -41,11 +37,11 @@ public class ReferralRequestFollowUpServiceTests
         mockDataAccessProvider.Setup(dap => dap.AddReferralFollowUpToken(newReferralRequestFollowUp).Result).Returns(newReferralRequestFollowUp);
      
         // Act
-        await referralFollowUpService.GenerateAndSendFollowUpEmail(newReferralRequest);
+        var referralRequestFollowUp = await referralFollowUpService.CreateReferralRequestFollowUp(newReferralRequest);
 
         // Assert
         mockDataAccessProvider.Verify(dap => dap.AddReferralFollowUpToken(It.Is<ReferralRequestFollowUp>(rrfu => rrfu.Token == newReferralRequestFollowUp.Token && rrfu.ReferralRequest == newReferralRequestFollowUp.ReferralRequest)));
-        mockEmailSender.Verify(es => es.SendFollowUpEmail(newReferralRequest, It.IsAny<string>()));
+        referralRequestFollowUp.Should().BeEquivalentTo(newReferralRequestFollowUp);
     }
     
     [TestCase(true)]

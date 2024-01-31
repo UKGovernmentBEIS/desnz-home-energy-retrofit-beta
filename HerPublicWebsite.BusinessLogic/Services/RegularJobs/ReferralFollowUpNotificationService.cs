@@ -1,39 +1,43 @@
-﻿using HerPublicWebsite.BusinessLogic.Models;
+﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
-public interface IReferralFollowUpJobService
+public interface IReferralFollowUpNotificationService
 {
-    public Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail();
+    public Task SendReferralFollowUpNotifications();
 }
 
-public class ReferralFollowUpJobService : IReferralFollowUpJobService
+public class ReferralFollowUpNotificationService : IReferralFollowUpNotificationService
 {
     private readonly IDataAccessProvider dataProvider;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
     private readonly IWorkingDayHelperService workingDayHelperService;
     private readonly IReferralFollowUpService referralFollowUpManager;
-    
-    public ReferralFollowUpJobService(
+    private readonly IEmailSender emailSender;
+
+    public ReferralFollowUpNotificationService(
+        IEmailSender emailSender,
         IDataAccessProvider dataProvider,
         CsvFileCreator.CsvFileCreator csvFileCreator, 
         IWorkingDayHelperService workingDayHelperService,
         IReferralFollowUpService referralFollowUpManager
         )
     {
+        this.emailSender = emailSender;
         this.dataProvider = dataProvider;
         this.csvFileCreator = csvFileCreator;
         this.workingDayHelperService = workingDayHelperService;
         this.referralFollowUpManager = referralFollowUpManager;
     }
 
-    public async Task GetReferralsPassedTenWorkingDayThresholdWithNoFollowUpAndTriggerEmail()
+    public async Task SendReferralFollowUpNotifications()
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
         var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBeforeDate(endDate);
-        foreach (ReferralRequest newReferral in newReferrals) {
-            await referralFollowUpManager.GenerateAndSendFollowUpEmail(newReferral);
+        foreach (var newReferral in newReferrals) {
+            var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(newReferral);
+            emailSender.SendFollowUpEmail(newReferral, referralRequestFollowUp.Token);
         }
     }
 }

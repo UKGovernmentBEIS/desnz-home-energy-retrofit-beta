@@ -1,38 +1,30 @@
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
-
 using HerPublicWebsite.BusinessLogic.Models;
 
 namespace HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 
 public interface IReferralFollowUpService
 {
-    public Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest);
+    public Task<ReferralRequestFollowUp> CreateReferralRequestFollowUp(ReferralRequest referralRequest);
     public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token);
     public Task RecordFollowUpResponseForToken(string token, bool hasFollowedUp);
 }
 
 public class ReferralFollowUpService : IReferralFollowUpService
 {
-    private readonly IEmailSender emailSender;
     private readonly IDataAccessProvider dataAccessProvider;
     private readonly IGuidService guidService;
-    public ReferralFollowUpService(IEmailSender emailSender, IDataAccessProvider dataAccessProvider, IGuidService guidService)
+    public ReferralFollowUpService(IDataAccessProvider dataAccessProvider, IGuidService guidService)
     {
-        this.emailSender = emailSender;
         this.dataAccessProvider = dataAccessProvider;
         this.guidService = guidService;
     }
 
-    public async Task GenerateAndSendFollowUpEmail(ReferralRequest referralRequest)
+    public async Task<ReferralRequestFollowUp> CreateReferralRequestFollowUp(ReferralRequest referralRequest)
     {
         var token = GenerateFollowUpToken();
-
-        var followUpLink = "https://localhost:5001/referral-follow-up/respond-page/" + token;
-        
         var referralRequestFollowUp = new ReferralRequestFollowUp(referralRequest, token);
         await dataAccessProvider.AddReferralFollowUpToken(referralRequestFollowUp);
-
-        emailSender.SendFollowUpEmail(referralRequest, followUpLink);
+        return referralRequestFollowUp;
     }
     public ReferralRequestFollowUp GetReferralRequestFollowUpByToken(string token)
     {

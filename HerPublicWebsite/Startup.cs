@@ -68,7 +68,7 @@ namespace HerPublicWebsite
             services.AddScoped<QuestionnaireService>();
             services.AddScoped<QuestionnaireUpdater>();
             services.AddScoped<IQuestionFlowService, QuestionFlowService>();
-            services.AddScoped<IReferralFollowUpJobService, ReferralFollowUpJobService>();
+            services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
             services.AddScoped<IUnsubmittedReferralRequestsService, UnsubmittedReferralRequestsService>();
             services.AddScoped<IWorkingDayHelperService, WorkingDayHelperService>();
 
