@@ -105,37 +105,34 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
             try
             {
                 localAuthorityDetails = LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[referralRequest.CustodianCode];
+
+                var personalisation = new Dictionary<string, dynamic>
+                {
+                    { template.RecipientNamePlaceholder, referralRequest.FullName },
+                    { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
+                    { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
+                    { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
+                    { template.FollowUpLinkPlaceholder, followUpLink },
+                };
+                var emailModel = new GovUkNotifyEmailModel
+                {
+                    EmailAddress = referralRequest.ContactEmailAddress,
+                    TemplateId = template.Id,
+                    Personalisation = personalisation
+                };
+                SendEmail(emailModel);
             }
             catch (KeyNotFoundException ex)
             {
                 logger.LogError
                 (
                     ex,
-                    "Attempted to send follow up email with invalid custodian code \"{CustodianCode}\"",
-                    referralRequest.CustodianCode
-                );
-                throw new ArgumentOutOfRangeException
-                (
-                    $"Attempted to send follow up email with invalid custodian code \"{referralRequest.CustodianCode}\"",
-                    ex
+                    "Failed to send follow up email for referral request \"{referralRequest.Id}\" with invalid custodian code",
+                    referralRequest.Id
                 );
             }
             
-            var personalisation = new Dictionary<string, dynamic>
-            {
-                { template.RecipientNamePlaceholder, referralRequest.FullName },
-                { template.ReferenceCodePlaceholder, referralRequest.ReferralCode },
-                { template.LocalAuthorityNamePlaceholder, localAuthorityDetails.Name },
-                { template.ReferralDatePlaceholder, referralRequest.RequestDate.ToShortDateString() },
-                { template.FollowUpLinkPlaceholder, followUpLink },
-            };
-            var emailModel = new GovUkNotifyEmailModel
-            {
-                EmailAddress = referralRequest.ContactEmailAddress,
-                TemplateId = template.Id,
-                Personalisation = personalisation
-            };
-            SendEmail(emailModel);
+            
 
         }
         

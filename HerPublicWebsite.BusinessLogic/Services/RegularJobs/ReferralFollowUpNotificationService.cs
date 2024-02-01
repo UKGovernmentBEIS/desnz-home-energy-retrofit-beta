@@ -1,5 +1,4 @@
-﻿using HerPortal.BusinessLogic;
-using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
+﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using Microsoft.Extensions.Options;
 
@@ -12,7 +11,8 @@ public interface IReferralFollowUpNotificationService
 
 public class ReferralFollowUpNotificationService : IReferralFollowUpNotificationService
 {
-    private readonly ReferralFollowUpNotificationServiceConfiguration config;
+    private readonly GlobalConfiguration globalConfig;
+    private readonly ReferralRequestNotificationConfiguration referralRequestNotificationConfig;
     private readonly IDataAccessProvider dataProvider;
     private readonly CsvFileCreator.CsvFileCreator csvFileCreator;
     private readonly IWorkingDayHelperService workingDayHelperService;
@@ -20,7 +20,8 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     private readonly IEmailSender emailSender;
 
     public ReferralFollowUpNotificationService(
-        IOptions<ReferralFollowUpNotificationServiceConfiguration> options,
+        IOptions<GlobalConfiguration> globalConfig,
+        IOptions<ReferralRequestNotificationConfiguration> referralRequestNotificationConfig,
         IEmailSender emailSender,
         IDataAccessProvider dataProvider,
         CsvFileCreator.CsvFileCreator csvFileCreator, 
@@ -28,7 +29,8 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
         IReferralFollowUpService referralFollowUpManager
         )
     {
-        config = options.Value;
+        this.globalConfig = globalConfig.Value;
+        this.referralRequestNotificationConfig = referralRequestNotificationConfig.Value;
         this.emailSender = emailSender;
         this.dataProvider = dataProvider;
         this.csvFileCreator = csvFileCreator;
@@ -39,10 +41,14 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     public async Task SendReferralFollowUpNotifications()
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
-        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBeforeDate(endDate);
+        var startDate = referralRequestNotificationConfig.CutoffEpoch;
+        var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBetweenDates(startDate, endDate);
+        var uriBuilder = new UriBuilder(globalConfig.AppBaseUrl);
+        uriBuilder.Path = "referral-follow-up";
         foreach (var newReferral in newReferrals) {
             var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(newReferral);
-            emailSender.SendFollowUpEmail(newReferral, config.AppBaseUrl + "referral-follow-up?token=" + referralRequestFollowUp.Token);
+            uriBuilder.Query = "token=" + referralRequestFollowUp.Token;
+            emailSender.SendFollowUpEmail(newReferral, uriBuilder.ToString());
             await dataProvider.UpdateReferralRequestByIdWithFollowUpSentAsync(newReferral.Id);
         }
     }

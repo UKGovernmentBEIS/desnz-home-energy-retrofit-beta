@@ -86,10 +86,10 @@ public class DataAccessProvider : IDataAccessProvider
             .ToListAsync();
     }
 
-    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBeforeDate(DateTime cutoffDate)
+    public async Task<IList<ReferralRequest>> GetReferralRequestsWithNoFollowUpBetweenDates(DateTime startDate, DateTime endDate)
     {
         return await context.ReferralRequests
-            .Where(rr => rr.RequestDate <= cutoffDate && !rr.FollowUpEmailSent)
+            .Where(rr => rr.RequestDate >= startDate && rr.RequestDate <= endDate && !rr.FollowUpEmailSent)
             .ToListAsync();
     }
 
