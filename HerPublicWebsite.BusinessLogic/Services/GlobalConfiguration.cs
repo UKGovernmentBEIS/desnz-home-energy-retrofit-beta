@@ -1,6 +1,6 @@
-namespace HerPortal.BusinessLogic;
+namespace HerPublicWebsite.BusinessLogic;
 
-public class ReferralFollowUpNotificationServiceConfiguration
+public class GlobalConfiguration
 {
     public const string ConfigSection = "Global";
     

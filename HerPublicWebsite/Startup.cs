@@ -6,7 +6,6 @@ using Community.Microsoft.Extensions.Caching.PostgreSql;
 using GovUkDesignSystem.ModelBinders;
 using Hangfire;
 using Hangfire.PostgreSql;
-using HerPortal.BusinessLogic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +33,7 @@ using HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using Microsoft.AspNetCore.Http;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
+using GlobalConfiguration = HerPublicWebsite.BusinessLogic.GlobalConfiguration;
 
 namespace HerPublicWebsite
 {
@@ -212,8 +212,8 @@ namespace HerPublicWebsite
         
         private void ConfigureReferralFollowUpNotificationService(IServiceCollection services)
         {
-            services.Configure<ReferralFollowUpNotificationServiceConfiguration>(
-                configuration.GetSection(ReferralFollowUpNotificationServiceConfiguration.ConfigSection));
+            services.Configure<GlobalConfiguration>(
+                configuration.GetSection(GlobalConfiguration.ConfigSection));
             services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
         }
 
