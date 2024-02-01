@@ -24,14 +24,17 @@ public class CsvFileCreator
 
     public MemoryStream CreateReferralRequestFollowUpFileData(IEnumerable<ReferralRequest> referralRequests)
     {
-        var consortiumData = referralRequests.GroupBy(rr => LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[rr.CustodianCode].Consortium)
-            .Select(group => new CsvRowConsortiumFollowUpInformation(group));
-
-        var rows = referralRequests.GroupBy(rr => rr.CustodianCode)
-            .Select(group => new CsvRowLaDownloadInformation(
-                group, consortiumData.First(csd => csd.Consortium == (LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[group.Key].Consortium ?? "")))
+        var rows = referralRequests
+            .GroupBy(rr => rr.CustodianCode)
+            .GroupBy(groupingByLa =>
+                LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[groupingByLa.Key].Consortium)
+            .SelectMany(groupingByConsortium =>
+                {
+                    var consortiumReferrals = groupingByConsortium.SelectMany(g => g).ToList();
+                    var consortiumStatistics = new ConsortiumStatistics(consortiumReferrals);
+                    return groupingByConsortium.Select(groupingByLa => new CsvRowLaDownloadInformation(groupingByLa, consortiumStatistics));
+                }
             );
-        
         return GenerateCsvMemoryStreamFromFileRows(rows);
     }
 
@@ -55,44 +58,21 @@ public class CsvFileCreator
         }
     }
     
-    private class CsvRowConsortiumFollowUpInformation
+    private class ConsortiumStatistics
     {
-        [Index(0)]
-        [Name("Consortium")]
-        public string Consortium { get; set; }
-
-        [Index(1)]
-        [Name("Consortium All Referrals Downloaded")]
         public bool AllConsortiumReferralsDownloaded { get; set; }
-        
-        [Index(2)]
-        [Name("Consortium Number of Referrals Not Downloaded")]
         public int NumberUndownloadedConsortiumReferrals { get; set; }
-
-        [Index(3)]
-        [Name("Consortium Percentage of Referrals Not Downloaded")]
         public float PercentageUndownloadedConsortiumReferrals { get; set; }
-
-
-        [Index(4)]
-        [Name("Consortium All Referrals Reported Contacted or No Reply")]
         public bool AllConsortiumReferralsContacted { get; set; }
-        
-        [Index(5)]
-        [Name("Consortium Number of Referrals Reported Not Contacted")]
         public int NumberUncontactedConsortiumReferrals { get; set; }
-
-        [Index(6)]
-        [Name("Consortium Percentage of Referrals Reported Not Contacted")]
         public float PercentageUncontactedConsortiumReferrals { get; set; }
-        public CsvRowConsortiumFollowUpInformation(IGrouping<string,ReferralRequest> requestGrouping){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium ?? "";
-            NumberUndownloadedConsortiumReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
+        public ConsortiumStatistics(List<ReferralRequest> referralRequests){
+            NumberUndownloadedConsortiumReferrals = referralRequests.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
             AllConsortiumReferralsDownloaded = NumberUndownloadedConsortiumReferrals == 0;
-            PercentageUndownloadedConsortiumReferrals = (float)NumberUndownloadedConsortiumReferrals / requestGrouping.Count();
-            NumberUncontactedConsortiumReferrals = requestGrouping.Sum(rr => rr.FollowUp == null ? 0 : rr.FollowUp.WasFollowedUp == false ? 1 : 0);
+            PercentageUndownloadedConsortiumReferrals = (float)NumberUndownloadedConsortiumReferrals / referralRequests.Count();
+            NumberUncontactedConsortiumReferrals = referralRequests.Sum(rr => rr.FollowUp == null ? 0 : rr.FollowUp.WasFollowedUp == false ? 1 : 0);
             AllConsortiumReferralsContacted = NumberUncontactedConsortiumReferrals == 0;
-            PercentageUncontactedConsortiumReferrals = (float)NumberUncontactedConsortiumReferrals / requestGrouping.Count();
+            PercentageUncontactedConsortiumReferrals = (float)NumberUncontactedConsortiumReferrals / referralRequests.Count();
         }
     }
 
@@ -154,8 +134,8 @@ public class CsvFileCreator
         [Name("LA Percentage of Referrals Responded to email")]
         public float LaPercentageOfFollowUpResponses { get; set; }
 
-        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, CsvRowConsortiumFollowUpInformation consortiumData){
-            Consortium =  consortiumData.Consortium;
+        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, ConsortiumStatistics consortiumData){
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
             LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Name;
             AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
             NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
