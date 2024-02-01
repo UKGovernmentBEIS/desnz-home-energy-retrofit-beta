@@ -214,6 +214,8 @@ namespace HerPublicWebsite
         {
             services.Configure<GlobalConfiguration>(
                 configuration.GetSection(GlobalConfiguration.ConfigSection));
+            services.Configure<ReferralRequestNotificationConfiguration>(
+                configuration.GetSection(ReferralRequestNotificationConfiguration.ConfigSection));
             services.AddScoped<IReferralFollowUpNotificationService, ReferralFollowUpNotificationService>();
         }
 
