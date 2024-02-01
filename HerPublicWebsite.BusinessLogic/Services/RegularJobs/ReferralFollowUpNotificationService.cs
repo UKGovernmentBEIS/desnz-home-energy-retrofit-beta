@@ -39,9 +39,12 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     {
         var endDate = await workingDayHelperService.AddWorkingDaysToDateTime(DateTime.Today, -10);
         var newReferrals = await dataProvider.GetReferralRequestsWithNoFollowUpBeforeDate(endDate);
+        var uriBuilder = new UriBuilder(config.AppBaseUrl);
+        uriBuilder.Path = "referral-follow-up";
         foreach (var newReferral in newReferrals) {
             var referralRequestFollowUp = await referralFollowUpManager.CreateReferralRequestFollowUp(newReferral);
-            emailSender.SendFollowUpEmail(newReferral, config.AppBaseUrl + "referral-follow-up?token=" + referralRequestFollowUp.Token);
+            uriBuilder.Query = "token=" + referralRequestFollowUp.Token;
+            emailSender.SendFollowUpEmail(newReferral, uriBuilder.ToString());
             await dataProvider.UpdateReferralRequestByIdWithFollowUpSentAsync(newReferral.Id);
         }
     }
