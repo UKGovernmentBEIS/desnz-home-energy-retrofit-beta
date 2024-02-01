@@ -166,7 +166,7 @@ public class CsvFileCreator
             NumberUndownloadedLaReferrals = requestGrouping.Sum(rr => rr.ReferralWrittenToCsv ? 0 : 1);
             PercentageUndownloadedLaReferrals = (float)NumberUndownloadedLaReferrals/requestGrouping.Count();
             NumberUncontactedLaReferrals = requestGrouping.Sum(rr => rr.FollowUp == null ? 0 : rr.FollowUp.WasFollowedUp == false ? 1 : 0);
-            PercentageUncontactedLaReferrals = (float)NumberUncontactedLaReferrals / requestGrouping.Sum(rr => rr.FollowUp != null ? 1 : 0 );
+            PercentageUncontactedLaReferrals = (float)NumberUncontactedLaReferrals / requestGrouping.Count();
             LaNumberOfFollowUpResponses = requestGrouping.Sum(rr => rr.FollowUp?.WasFollowedUp == null ? 0 : 1);
             LaPercentageOfFollowUpResponses = LaNumberOfFollowUpResponses / requestGrouping.Sum(rr => rr.FollowUp != null ? 1 : 0 );
         }

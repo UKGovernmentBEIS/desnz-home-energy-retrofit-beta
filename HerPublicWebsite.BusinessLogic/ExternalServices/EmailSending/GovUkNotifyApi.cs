@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using HerPublicWebsite.BusinessLogic.Models;
+﻿using HerPublicWebsite.BusinessLogic.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Notify.Client;
 using Notify.Exceptions;
-using Notify.Models.Responses;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
 {
