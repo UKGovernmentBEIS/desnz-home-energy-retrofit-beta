@@ -146,15 +146,16 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                         { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
                         { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
                     };
-                    foreach (var emailAddress in govUkNotifyConfig.ComplianceEmailRecipients)
+                    var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
+                    foreach (var emailAddress in recipientList.Split(","))
                     {
                         var emailModel = new GovUkNotifyEmailModel
                         {
-                            EmailAddress = emailAddress,
+                            EmailAddress = emailAddress.Trim(),
                             TemplateId = template.Id,
                             Personalisation = personalisation
                         };
-                        SendEmail(emailModel);
+                        // SendEmail(emailModel);
                     }
                 }    
 
