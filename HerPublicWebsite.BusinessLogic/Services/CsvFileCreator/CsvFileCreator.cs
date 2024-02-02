@@ -134,21 +134,21 @@ public class CsvFileCreator
         [Name("LA Percentage of Referrals Responded to email")]
         public double LaPercentageOfFollowUpResponses { get; set; }
 
-        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, ConsortiumStatistics consortiumData){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.Key].Consortium;
-            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.Key].Name;
+        public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGroupingByCustodianCode, ConsortiumStatistics consortiumData){
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGroupingByCustodianCode.Key].Consortium;
+            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGroupingByCustodianCode.Key].Name;
             AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
             NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
             PercentageUndownloadedConsortiumReferrals = consortiumData.PercentageUndownloadedConsortiumReferrals;
             AllConsortiumReferralsContacted = consortiumData.AllConsortiumReferralsContacted;
             NumberUncontactedConsortiumReferrals = consortiumData.NumberUncontactedConsortiumReferrals;
             PercentageUncontactedConsortiumReferrals = consortiumData.PercentageUncontactedConsortiumReferrals;
-            NumberUndownloadedLaReferrals = requestGrouping.Count(rr => !rr.ReferralWrittenToCsv);
-            PercentageUndownloadedLaReferrals = 100 * (double)NumberUndownloadedLaReferrals/requestGrouping.Count();
-            NumberUncontactedLaReferrals = requestGrouping.Count(rr => rr.FollowUp?.WasFollowedUp == false);
-            PercentageUncontactedLaReferrals = 100 * (double)NumberUncontactedLaReferrals / requestGrouping.Count();
-            LaNumberOfFollowUpResponses = requestGrouping.Count(rr => rr.FollowUp?.WasFollowedUp != null);
-            LaPercentageOfFollowUpResponses = 100 * (double)LaNumberOfFollowUpResponses / requestGrouping.Sum(rr => rr.FollowUp != null ? 1 : 0 );
+            NumberUndownloadedLaReferrals = requestGroupingByCustodianCode.Count(rr => !rr.ReferralWrittenToCsv);
+            PercentageUndownloadedLaReferrals = 100 * (double)NumberUndownloadedLaReferrals/requestGroupingByCustodianCode.Count();
+            NumberUncontactedLaReferrals = requestGroupingByCustodianCode.Count(rr => rr.FollowUp?.WasFollowedUp == false);
+            PercentageUncontactedLaReferrals = 100 * (double)NumberUncontactedLaReferrals / requestGroupingByCustodianCode.Count();
+            LaNumberOfFollowUpResponses = requestGroupingByCustodianCode.Count(rr => rr.FollowUp?.WasFollowedUp != null);
+            LaPercentageOfFollowUpResponses = 100 * (double)LaNumberOfFollowUpResponses / requestGroupingByCustodianCode.Sum(rr => rr.FollowUp != null ? 1 : 0 );
         }
     }
 
