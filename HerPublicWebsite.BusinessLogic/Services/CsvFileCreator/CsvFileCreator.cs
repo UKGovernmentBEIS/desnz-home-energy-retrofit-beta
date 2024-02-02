@@ -135,8 +135,8 @@ public class CsvFileCreator
         public double LaPercentageOfFollowUpResponses { get; set; }
 
         public CsvRowLaDownloadInformation(IGrouping<string,ReferralRequest> requestGrouping, ConsortiumStatistics consortiumData){
-            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Consortium;
-            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.First().CustodianCode].Name;
+            Consortium =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.Key].Consortium;
+            LocalAuthority =  LocalAuthorityData.LocalAuthorityDetailsByCustodianCode[requestGrouping.Key].Name;
             AllConsortiumReferralsDownloaded = consortiumData.AllConsortiumReferralsDownloaded;
             NumberUndownloadedConsortiumReferrals = consortiumData.NumberUndownloadedConsortiumReferrals;
             PercentageUndownloadedConsortiumReferrals = consortiumData.PercentageUndownloadedConsortiumReferrals;
