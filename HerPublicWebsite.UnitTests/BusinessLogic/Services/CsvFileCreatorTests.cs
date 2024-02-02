@@ -195,10 +195,10 @@ $"2023-01-01 13:00:01,DummyCode00001,{expectedOutput},contact1@example.com,00001
             "Consortium Percentage of Referrals Not Downloaded,Consortium All Referrals Contacted,"+
             "Consortium Number of Referrals Not Contacted,Consortium Percentage of Referrals Not Contacted,"+
             "LA,LA Number of Referrals Not Downloaded,LA Percentage of Referrals Not Downloaded,"+
-            "LA Number of Referrals Not Contacted,LA Percentage of Referrals Not Contacted\r\n"+
-            "Bristol,False,3,0.6,False,2,0.4,Bath and North East Somerset Council,2,1,1,0.5\r\n"+ // Custodian Code 114
-            "Bristol,False,3,0.6,False,2,0.4,North Somerset Council,1,0.33333334,1,0.33333334\r\n"+ // Custodian Code 121
-            ",False,1,0.33333334,False,2,0.6666667,Aberdeenshire Council,1,0.33333334,2,0.6666667\r\n" // Custodian Code 9052
+            "LA Number of Referrals Not Contacted,LA Percentage of Referrals Not Contacted,LA Number of Referrals Responded to email,LA Percentage of Referrals Responded to email\r\n"+
+            "Bristol,False,3,60,False,2,40,Bath and North East Somerset Council,2,100,1,50,1,50\r\n"+ // Custodian Code 114
+            "Bristol,False,3,60,False,2,40,North Somerset Council,1,33.333333333333336,1,33.333333333333336,3,100\r\n"+ // Custodian Code 121
+            ",False,1,33.333333333333336,False,2,66.66666666666667,Aberdeenshire Council,1,33.333333333333336,2,66.66666666666667,3,100\r\n" // Custodian Code 9052
             );
     }
 }
