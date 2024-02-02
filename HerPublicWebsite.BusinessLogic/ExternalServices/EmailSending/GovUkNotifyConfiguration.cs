@@ -5,6 +5,7 @@ public class GovUkNotifyConfiguration
     public const string ConfigSection = "GovUkNotify";
         
     public string ApiKey { get; set; }
+    public List<string> ComplianceEmailRecipients { get; set; }
     public ReferenceCodeConfiguration ReferenceCodeTemplate { get; set; }
     public ReferralFollowUpConfiguration ReferralFollowUpTemplate { get; set; }
     public ComplianceReportConfiguration ComplianceReportTemplate { get; set; }

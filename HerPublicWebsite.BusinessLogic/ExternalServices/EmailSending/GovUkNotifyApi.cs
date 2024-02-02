@@ -146,13 +146,16 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                         { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
                         { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
                     };
-                    var emailModel = new GovUkNotifyEmailModel
+                    foreach (var emailAddress in govUkNotifyConfig.ComplianceEmailRecipients)
                     {
-                        EmailAddress = "calum.pinder@softwire.com",
-                        TemplateId = template.Id,
-                        Personalisation = personalisation
-                    };
-                    SendEmail(emailModel);
+                        var emailModel = new GovUkNotifyEmailModel
+                        {
+                            EmailAddress = emailAddress,
+                            TemplateId = template.Id,
+                            Personalisation = personalisation
+                        };
+                        SendEmail(emailModel);
+                    }
                 }    
 
     }
