@@ -13,7 +13,9 @@ public class ReferralRequestFollowUpController : Controller
 {
     private readonly IReferralFollowUpService referralFollowUpService;
 
-    public ReferralRequestFollowUpController(IReferralFollowUpService referralFollowUpService)
+    public ReferralRequestFollowUpController(
+        IReferralFollowUpService referralFollowUpService
+    )
     {
         this.referralFollowUpService = referralFollowUpService;
     }
