@@ -139,6 +139,12 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 MemoryStream historicReferralRequestFollowUpFileData
                 )
                 {
+                    var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
+                    if (recipientList == "")
+                    {
+                        return;
+                    }
+                    
                     var template = govUkNotifyConfig.ComplianceReportTemplate;
                     Dictionary<String, dynamic> personalisation = new Dictionary<String, dynamic>
                     {
@@ -146,7 +152,6 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                         { "File2Link", NotificationClient.PrepareUpload(recentReferralRequestFollowUpFileData.ToArray(), true)},
                         { "File3Link", NotificationClient.PrepareUpload(historicReferralRequestFollowUpFileData.ToArray(), true)},
                     };
-                    var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
                     foreach (var emailAddress in recipientList.Split(","))
                     {
                         var emailModel = new GovUkNotifyEmailModel
@@ -157,6 +162,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                         };
                         SendEmail(emailModel);
                     }
+                    
                 }    
 
     }
