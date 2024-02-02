@@ -155,7 +155,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                             TemplateId = template.Id,
                             Personalisation = personalisation
                         };
-                        // SendEmail(emailModel);
+                        SendEmail(emailModel);
                     }
                 }    
 
