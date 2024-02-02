@@ -140,7 +140,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending
                 )
                 {
                     var recipientList = govUkNotifyConfig.ComplianceEmailRecipients;
-                    if (recipientList == "")
+                    if (String.IsNullOrEmpty(recipientList))
                     {
                         return;
                     }
