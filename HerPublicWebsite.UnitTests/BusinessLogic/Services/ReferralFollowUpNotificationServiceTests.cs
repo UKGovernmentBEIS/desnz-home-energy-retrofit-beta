@@ -48,8 +48,8 @@ public class ReferralFollowUpNotificationServiceTests
         referralFilterService = new ReferralFilterService(mockDateHelper.Object);
 
         referralFollowUpNotificationService = new ReferralFollowUpNotificationService(
-            globalConfig.AsOptions(),
-            requestNotificationConfig.AsOptions(),
+            // globalConfig.AsOptions(),
+            // requestNotificationConfig.AsOptions(),
             mockEmailSender.Object,
             mockDataProvider.Object,
             mockCsvFileCreator.Object,

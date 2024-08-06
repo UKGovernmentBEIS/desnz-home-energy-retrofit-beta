@@ -36,7 +36,7 @@ public class EpbEpcApiTests
         memoryCache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
         memoryCache.Set("EpbEpcToken", "foobar");
 
-        epcApi = new EpbEpcApi(Options.Create(config), memoryCache, logger);
+        epcApi = new EpbEpcApi();
 
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;

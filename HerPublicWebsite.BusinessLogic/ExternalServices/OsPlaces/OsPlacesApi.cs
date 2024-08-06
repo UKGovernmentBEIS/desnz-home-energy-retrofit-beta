@@ -2,24 +2,25 @@ using System.Text.RegularExpressions;
 using HerPublicWebsite.BusinessLogic.Extensions;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
 using HerPublicWebsite.BusinessLogic.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.OsPlaces;
 
 public class OsPlacesApi : IOsPlacesApi
 {
     private readonly OsPlacesConfiguration config;
-    private readonly ILogger<OsPlacesApi> logger;
+    // private readonly ILogger<OsPlacesApi> logger;
     private const int MaxResults = 100;
     private readonly Regex NonAlphanumericCharacters = new Regex(@"[^a-zA-Z0-9]", RegexOptions.Compiled);
 
-    public OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlacesApi> logger)
+    // public OsPlacesApi(IOptions<OsPlacesConfiguration> options, ILogger<OsPlacesApi> logger)
+    // {
+    //     this.config = options.Value;
+    //     this.logger = logger;
+    // }
+    public OsPlacesApi()
     {
-        this.config = options.Value;
-        this.logger = logger;
     }
-    
+
     public async Task<List<Address>> GetAddressesAsync(string postcode, string buildingNameOrNumber)
     {
         if (!postcode.IsValidUkPostcodeFormat())
@@ -91,7 +92,7 @@ public class OsPlacesApi : IOsPlacesApi
             return filteredResults.OrderBy(a => a.AddressLine1).ToList();
         }
         catch (Exception e) {
-            logger.LogError("OS Places postcode request failed: {}", e.Message);
+            // logger.LogError("OS Places postcode request failed: {}", e.Message);
             return new List<Address>();
         }
     }

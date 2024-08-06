@@ -31,7 +31,7 @@ public class OsPlacesApiTests
 
         logger = new NullLogger<OsPlacesApi>();
 
-        underTest = new OsPlacesApi(Options.Create(config), logger);
+        underTest = new OsPlacesApi();
 
         mockHttpHandler = new MockHttpMessageHandler();
         HttpRequestHelper.handler = mockHttpHandler;

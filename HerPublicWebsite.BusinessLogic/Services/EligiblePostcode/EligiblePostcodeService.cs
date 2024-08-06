@@ -1,5 +1,4 @@
 ﻿using HerPublicWebsite.BusinessLogic.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 
@@ -10,11 +9,14 @@ public interface IEligiblePostcodeService
 
 public class EligiblePostcodeService : IEligiblePostcodeService
 {
-    private readonly ILogger<EligiblePostcodeService> logger;
+    // private readonly ILogger<EligiblePostcodeService> logger;
     
-    public EligiblePostcodeService(ILogger<EligiblePostcodeService> logger)
+    // public EligiblePostcodeService(ILogger<EligiblePostcodeService> logger)
+    // {
+    //     this.logger = logger;
+    // }
+    public EligiblePostcodeService()
     {
-        this.logger = logger;
     }
 
     // Check whether a postcode is in the list of eligible postcodes found on this page
@@ -27,7 +29,7 @@ public class EligiblePostcodeService : IEligiblePostcodeService
         if (normalisedPostcode == null)
         {
             // We shouldn't be passing non-postcodes to this method so record an error that can be investigated.
-            logger.LogError("IsEligiblePostcode was called with a string that is not a valid postcode: {}", postcode);
+            // logger.LogError("IsEligiblePostcode was called with a string that is not a valid postcode: {}", postcode);
             return false;
         }
         

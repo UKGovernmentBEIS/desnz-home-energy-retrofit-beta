@@ -1,4 +1,3 @@
-using GovUkDesignSystem.Attributes;
 
 namespace HerPublicWebsite.BusinessLogic.Models.Enums;
 
@@ -9,6 +8,6 @@ public enum EpcConfirmation
 {
     Yes = 0,
     No = 1,
-    [GovUkRadioCheckboxLabelText(Text = "I don't know")]
+    // [GovUkRadioCheckboxLabelText(Text = "I don't know")]
     Unknown
 }

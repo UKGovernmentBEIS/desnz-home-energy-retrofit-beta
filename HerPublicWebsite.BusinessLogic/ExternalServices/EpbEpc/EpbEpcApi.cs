@@ -1,27 +1,25 @@
 ﻿using System.Net;
 using HerPublicWebsite.BusinessLogic.ExternalServices.Common;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using HerPublicWebsite.BusinessLogic.Models;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
 {
     public class EpbEpcApi : IEpcApi
     {
         private readonly EpbEpcConfiguration config;
-        private readonly IMemoryCache memoryCache;
-        private readonly ILogger logger;
+        // private readonly IMemoryCache memoryCache;
+        // private readonly ILogger logger;
         private readonly string cacheTokenKey = "EpbEpcToken";
 
-        public EpbEpcApi(IOptions<EpbEpcConfiguration> options, IMemoryCache memoryCache, ILogger<EpbEpcApi> logger)
-        {
-            this.config = options.Value;
-            this.memoryCache = memoryCache;
-            this.logger = logger;
-        }
+        // public EpbEpcApi(IOptions<EpbEpcConfiguration> options, IMemoryCache memoryCache, ILogger<EpbEpcApi> logger)
+        // {
+        //     this.config = options.Value;
+        //     this.memoryCache = memoryCache;
+        //     this.logger = logger;
+        // }
+        public EpbEpcApi(){}
 
         public async Task<EpcDetails> EpcFromUprnAsync(string uprn)
         {
@@ -32,7 +30,7 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             }
             catch (Exception e)
             {
-                logger.LogError("Unable to get EPB API Token: {}", e.Message);
+                // logger.LogError("Unable to get EPB API Token: {}", e.Message);
                 return null;
             }
 
@@ -54,22 +52,22 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             }
             catch (ApiException e) when (e.StatusCode == HttpStatusCode.NotFound)
             {
-                logger.LogInformation("EPB EPC request could not find any results for UPRN {}", uprn);
+                // logger.LogInformation("EPB EPC request could not find any results for UPRN {}", uprn);
                 return null;
             }
             catch (Exception e)
             {
-                logger.LogError("EPB EPC request failed: {}", e.Message);
+                // logger.LogError("EPB EPC request failed: {}", e.Message);
                 return null;
             }
         }
 
         private async Task<string> RequestTokenIfNeeded()
         {
-            if (memoryCache.TryGetValue(cacheTokenKey, out string token))
-            {
-                return token;
-            }
+            // if (memoryCache.TryGetValue(cacheTokenKey, out string token))
+            // {
+            //     return token;
+            // }
 
             TokenRequestResponse response;
             try
@@ -86,18 +84,19 @@ namespace HerPublicWebsite.BusinessLogic.ExternalServices.EpbEpc
             }
             catch (Exception e)
             {
-                logger.LogError("There was an error requesting an access token for the epc api: {}", e.Message);
+                // logger.LogError("There was an error requesting an access token for the epc api: {}", e.Message);
                 throw;
             }
             // We divide by 2 to avoid edge cases of sending requests on the exact expiration time
             var expiryTimeInSeconds = response.ExpiryTimeInSeconds / 2;
-            token = response.Token;
-
-            var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetAbsoluteExpiration(TimeSpan.FromSeconds(expiryTimeInSeconds));
-
-            memoryCache.Set(cacheTokenKey, token, cacheEntryOptions);
-            return token;
+            // token = response.Token;
+            //
+            // var cacheEntryOptions = new MemoryCacheEntryOptions()
+            //     .SetAbsoluteExpiration(TimeSpan.FromSeconds(expiryTimeInSeconds));
+            //
+            // memoryCache.Set(cacheTokenKey, token, cacheEntryOptions);
+            // return token;
+            return "";
         }
 
         internal record class TokenRequestResponse

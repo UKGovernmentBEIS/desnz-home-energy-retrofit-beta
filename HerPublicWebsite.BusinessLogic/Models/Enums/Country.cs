@@ -1,5 +1,4 @@
-﻿using GovUkDesignSystem.Attributes;
-
+﻿
 namespace HerPublicWebsite.BusinessLogic.Models.Enums
 {
     // WARNING: Do not re-order this enum without considering the impact on questionnaires stored
@@ -10,7 +9,7 @@ namespace HerPublicWebsite.BusinessLogic.Models.Enums
         England,
         Wales,
         Scotland,
-        [GovUkRadioCheckboxLabelText(Text = "Northern Ireland")]
+        // [GovUkRadioCheckboxLabelText(Text = "Northern Ireland")]
         NorthernIreland
     }
 }

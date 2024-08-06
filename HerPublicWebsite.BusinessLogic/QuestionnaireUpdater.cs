@@ -4,7 +4,6 @@ using HerPublicWebsite.BusinessLogic.Models;
 using HerPublicWebsite.BusinessLogic.Models.Enums;
 using HerPublicWebsite.BusinessLogic.Services.EligiblePostcode;
 using HerPublicWebsite.BusinessLogic.Services.QuestionFlow;
-using Microsoft.Extensions.Logging;
 
 namespace HerPublicWebsite.BusinessLogic;
 
@@ -15,15 +14,15 @@ public class QuestionnaireUpdater
     private readonly IDataAccessProvider dataAccessProvider;
     private readonly IEmailSender emailSender;
     private readonly IQuestionFlowService questionFlowService;
-    private readonly ILogger logger;
+    // private readonly ILogger logger;
 
     public QuestionnaireUpdater(
         IEpcApi epcApi,
         IEligiblePostcodeService eligiblePostcodeService,
         IDataAccessProvider dataAccessProvider,
         IEmailSender emailSender,
-        IQuestionFlowService questionFlowService,
-        ILogger<QuestionnaireUpdater> logger
+        IQuestionFlowService questionFlowService//,
+        // ILogger<QuestionnaireUpdater> logger
     )
     {
         this.epcApi = epcApi;
@@ -31,7 +30,7 @@ public class QuestionnaireUpdater
         this.dataAccessProvider = dataAccessProvider;
         this.emailSender = emailSender;
         this.questionFlowService = questionFlowService;
-        this.logger = logger;
+        // this.logger = logger;
     }
 
     public Questionnaire UpdateCountry(Questionnaire questionnaire, Country country, QuestionFlowStep? entryPoint)
@@ -154,7 +153,7 @@ public class QuestionnaireUpdater
         }
         catch (Exception e)
         {
-            logger.LogError("Couldn't generate per referral report: {}", e.Message);
+            // logger.LogError("Couldn't generate per referral report: {}", e.Message);
         }
 
         return questionnaire;
@@ -169,7 +168,7 @@ public class QuestionnaireUpdater
         }
         catch (Exception e)
         {
-            logger.LogError("Couldn't generate anonymised report: {}", e.Message);
+            // logger.LogError("Couldn't generate anonymised report: {}", e.Message);
         }
 
         return questionnaire;

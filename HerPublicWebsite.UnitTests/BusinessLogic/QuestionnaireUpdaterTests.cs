@@ -47,8 +47,8 @@ public class QuestionnaireUpdaterTests
             mockPostCodeService.Object,
             mockDataAccessProvider.Object,
             mockEmailSender.Object,
-            mockQuestionFlowService.Object,
-            mockLogger.Object
+            mockQuestionFlowService.Object//,
+            // mockLogger.Object
         );
     }
     

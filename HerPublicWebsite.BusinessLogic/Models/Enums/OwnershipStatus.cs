@@ -1,5 +1,4 @@
-﻿using GovUkDesignSystem.Attributes;
-
+﻿
 namespace HerPublicWebsite.BusinessLogic.Models.Enums
 {
     // WARNING: Do not re-order this enum without considering the impact on questionnaires stored
@@ -7,11 +6,11 @@ namespace HerPublicWebsite.BusinessLogic.Models.Enums
     // invalid
     public enum OwnershipStatus
     {
-        [GovUkRadioCheckboxLabelText(Text = "Yes, I own my property and live in it")]
+        // [GovUkRadioCheckboxLabelText(Text = "Yes, I own my property and live in it")]
         OwnerOccupancy,
-        [GovUkRadioCheckboxLabelText(Text = "No, I am a tenant or social housing tenant")]
+        // [GovUkRadioCheckkboxLabelText(Text = "No, I am a tenant or social housing tenant")]
         PrivateTenancy,
-        [GovUkRadioCheckboxLabelText(Text = "I am the property owner but lease my property to one or more tenants")]
+        // [GovUkRadioCheckboxLabelText(Text = "I am the property owner but lease my property to one or more tenants")]
         Landlord,
     }
 }

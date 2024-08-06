@@ -1,11 +1,7 @@
 using System;
 using System.IO;
-using Amazon;
-using Amazon.S3;
 using Community.Microsoft.Extensions.Caching.PostgreSql;
 using GovUkDesignSystem.ModelBinders;
-using Hangfire;
-using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -35,8 +31,6 @@ using Microsoft.AspNetCore.Http;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
 using HerPublicWebsite.BusinessLogic.Services.SessionRecorder;
 using Microsoft.Extensions.Options;
-using Notify.Client;
-using Notify.Interfaces;
 using GlobalConfiguration = HerPublicWebsite.BusinessLogic.GlobalConfiguration;
 
 namespace HerPublicWebsite
@@ -56,14 +50,14 @@ namespace HerPublicWebsite
         public void ConfigureServices(IServiceCollection services)
         {
             // Add Hangfire services.
-            services.AddHangfire(config => config
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UsePostgreSqlStorage(configuration.GetConnectionString("PostgreSQLConnection")));
+            // services.AddHangfire(config => config
+            //     .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            //     .UseSimpleAssemblyNameTypeSerializer()
+            //     .UseRecommendedSerializerSettings()
+            //     .UsePostgreSqlStorage(configuration.GetConnectionString("PostgreSQLConnection")));
 
             // Add the Hangfire processing server as IHostedService
-            services.AddHangfireServer();
+            // services.AddHangfireServer();
 
             services.AddScoped<ICsvFileCreator, CsvFileCreator>();
             services.AddScoped<IDataAccessProvider, DataAccessProvider>();
@@ -183,11 +177,11 @@ namespace HerPublicWebsite
             services.AddScoped<IEmailSender, GovUkNotifyApi>();
             services.Configure<GovUkNotifyConfiguration>(
                 configuration.GetSection(GovUkNotifyConfiguration.ConfigSection));
-            services.AddScoped<INotificationClient, NotificationClient>(serviceProvider =>
-            {
-                var govUkNotifyConfiguration = serviceProvider.GetService<IOptions<GovUkNotifyConfiguration>>();
-                return new NotificationClient(govUkNotifyConfiguration.Value.ApiKey);
-            });
+            // services.AddScoped<INotificationClient, NotificationClient>(serviceProvider =>
+            // {
+            //     var govUkNotifyConfiguration = serviceProvider.GetService<IOptions<GovUkNotifyConfiguration>>();
+            //     return new NotificationClient(govUkNotifyConfiguration.Value.ApiKey);
+            // });
         }
 
         private void ConfigureS3Client(IServiceCollection services)
@@ -197,21 +191,21 @@ namespace HerPublicWebsite
 
             if (webHostEnvironment.IsDevelopment())
             {
-                services.AddScoped(_ =>
-                {
-                    // For local development connect to a local instance of Minio
-                    var clientConfig = new AmazonS3Config
-                    {
-                        AuthenticationRegion = s3Config.Region,
-                        ServiceURL = s3Config.LocalDevOnly_ServiceUrl,
-                        ForcePathStyle = true,
-                    };
-                    return new AmazonS3Client(s3Config.LocalDevOnly_AccessKey, s3Config.LocalDevOnly_SecretKey, clientConfig);
-                });
+                // services.AddScoped(_ =>
+                // {
+                //     // For local development connect to a local instance of Minio
+                //     var clientConfig = new AmazonS3Config
+                //     {
+                //         AuthenticationRegion = s3Config.Region,
+                //         ServiceURL = s3Config.LocalDevOnly_ServiceUrl,
+                //         ForcePathStyle = true,
+                //     };
+                //     return new AmazonS3Client(s3Config.LocalDevOnly_AccessKey, s3Config.LocalDevOnly_SecretKey, clientConfig);
+                // });
             }
             else
             {
-                services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.GetBySystemName(s3Config.Region)));
+                // services.AddScoped(_ => new AmazonS3Client(RegionEndpoint.GetBySystemName(s3Config.Region)));
             }
         }
 

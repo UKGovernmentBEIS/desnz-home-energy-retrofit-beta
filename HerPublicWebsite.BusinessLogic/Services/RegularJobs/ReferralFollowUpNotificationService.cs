@@ -1,7 +1,6 @@
 ﻿using HerPublicWebsite.BusinessLogic.ExternalServices.EmailSending;
 using HerPublicWebsite.BusinessLogic.Services.CsvFileCreator;
 using HerPublicWebsite.BusinessLogic.Services.ReferralFollowUps;
-using Microsoft.Extensions.Options;
 
 namespace HerPublicWebsite.BusinessLogic.Services.RegularJobs;
 
@@ -22,8 +21,8 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
     private readonly IReferralFilterService referralFilterService;
 
     public ReferralFollowUpNotificationService(
-        IOptions<GlobalConfiguration> globalConfig,
-        IOptions<ReferralRequestNotificationConfiguration> referralRequestNotificationConfig,
+        // IOptions<GlobalConfiguration> globalConfig,
+        // IOptions<ReferralRequestNotificationConfiguration> referralRequestNotificationConfig,
         IEmailSender emailSender,
         IDataAccessProvider dataProvider,
         ICsvFileCreator csvFileCreator,
@@ -31,8 +30,8 @@ public class ReferralFollowUpNotificationService : IReferralFollowUpNotification
         IReferralFollowUpService referralFollowUpManager,
         IReferralFilterService referralFilterService)
     {
-        this.globalConfig = globalConfig.Value;
-        this.referralRequestNotificationConfig = referralRequestNotificationConfig.Value;
+        // this.globalConfig = globalConfig.Value;
+        // this.referralRequestNotificationConfig = referralRequestNotificationConfig.Value;
         this.emailSender = emailSender;
         this.dataProvider = dataProvider;
         this.csvFileCreator = csvFileCreator;
