@@ -120,7 +120,7 @@ internal static class LocalAuthorityStatuses
             { "5300", Live },
             { "1535", TakingFutureReferrals },
             { "3610", Live },
-            { "1025", Pending },
+            { "1025", Live },
             { "1110", Live },
             { "9065", NotTakingPart },
             { "1720", Live },

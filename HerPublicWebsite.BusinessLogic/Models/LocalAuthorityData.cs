@@ -151,7 +151,7 @@ public class LocalAuthorityData
         { "5300", new LocalAuthorityDetails("Enfield Council", Hug2Status.Live, "https://new.enfield.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Greater London Authority") },
         { "1535", new LocalAuthorityDetails("Epping Forest District Council", Hug2Status.TakingFutureReferrals, "https://www.eppingforestdc.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Cambridgeshire and Peterborough Combined Authority") },
         { "3610", new LocalAuthorityDetails("Epsom and Ewell Borough Council", Hug2Status.Live, "http://www.epsom-ewell.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Surrey County Council") },
-        { "1025", new LocalAuthorityDetails("Erewash Borough Council", Hug2Status.Pending, "https://www.erewash.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
+        { "1025", new LocalAuthorityDetails("Erewash Borough Council", Hug2Status.Live, "https://www.erewash.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Midlands Net Zero Hub") },
         { "1110", new LocalAuthorityDetails("Exeter City Council", Hug2Status.Live, "https://exeter.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Devon County Council") },
         { "9065", new LocalAuthorityDetails("Falkirk Council", Hug2Status.NotTakingPart, "https://www.falkirk.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], null) },
         { "1720", new LocalAuthorityDetails("Fareham Borough Council", Hug2Status.Live, "https://www.fareham.gov.uk/", IncomeBandOptions[IncomeThreshold._36000], "Portsmouth City Council") },
