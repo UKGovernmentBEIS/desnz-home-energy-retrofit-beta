@@ -43,10 +43,8 @@ namespace HerPublicWebsite
             // Remove deprecated nightly tasks service
             recurringJobManager.RemoveIfExists("Nightly tasks");
             
-            recurringJobManager.AddOrUpdate<ReferralFollowUpNotificationService>(
-                "Get referrals passed ten day working threshold with no follow up",
-                service => service.SendReferralFollowUpNotifications(),
-                "30 0 * * *"); // at 00:30 every day
+            // As of PC-1757 we have removed this job to disable reminder emails after HUG2 shutdown
+            recurringJobManager.RemoveIfExists("Get referrals passed ten day working threshold with no follow up");
             
             recurringJobManager.AddOrUpdate<UnsubmittedReferralRequestsService>(
                 "Write unsubmitted referral requests to csv",
